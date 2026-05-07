@@ -12,7 +12,6 @@ project_entries:
   - title: Python-Study (자료형)
     url: /python-study-data-types/
     desc: 파이썬의 기본 변수와 숫자형, 문자열 등 기초 자료형 학습
-    highlight: Done
 
   - title: Project 2
     url: overview-post
