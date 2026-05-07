@@ -1,7 +1,7 @@
-title: Moonwalk
-author: Abhinav Saxena
-url: https://www.abhinavsaxena.com # root address of the site
-baseurl: "/moonwalk/" # set to "/moonwalk" if hosting under a project subpath
+title: Voliti's Blog
+author: Voliti
+url: https://voliti1.github.io/ # root address of the site
+baseurl: "" # set to "/moonwalk" if hosting under a project subpath
 description: > # description of the site (multiple lines allowed)
   Moonwalk is a fast and elegant Jekyll theme with a clean dark mode. It comes with horizontal list (for navbar and footer), card list (for portfolio), and a generic vertical list. It is very easy to modify in case you want to build over it - please see _layouts/home.html to do that.
 
@@ -12,7 +12,7 @@ twitter:
   card: summary_large_image
 
 #theme: moonwalk # if you are using GitHub Pages, change it to remote_theme: abhinavs/moonwalk
-remote_theme: abhinavs/moonwalk
+# remote_theme: abhinavs/moonwalk
 
 theme_config:
   appearance: "dark" # can be "light", "dark" or "auto"
