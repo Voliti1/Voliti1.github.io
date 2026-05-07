@@ -11,7 +11,7 @@ navbar_entries:
 project_entries:
   - title: Python-Study
     url: /python-study/
-    desc: 파이썬 기초 문법 및 API 활용 학습 목록
+    desc: 파이썬 기초 학습 목록
 
   - title: Project 2
     url: overview-post
