@@ -1,0 +1,245 @@
+## 파일 읽고 쓰기
+- 파일이 없으면 파일을 생성하면서 열고, 파일이 있으면 해당 파일을 열음
+- open()을 썼으면 close()도 무조건 써줘야함, open, close는 세트
+- 'r' : 읽기 모드, 'w' : 쓰기 모드, 'a' : 추가 모드
+
+```python
+f = open("filereadwrite.txt", 'w')
+f.close()
+```
+
+- 파일은 생성할 수 있지만 폴더 생성은 못함
+
+```python
+f = open("C:/0326/filereadwrite.txt", 'w')
+f.close()
+```
+
+## 파일을 쓰기 모드로 열어 내용 쓰기
+- f.write()로 파일에 내용을 넣어줄 수 있다.
+
+```python
+f = open("filereadwrite.txt", 'w')
+
+for i in range(1, 11):
+    data = "%d번째 줄입니다.\n" % i
+    print(data)
+    f.write(data)
+
+print("문자열 파일에 쓰기")
+f.write("문자열 파일에 쓰기")
+f.close()
+```
+**실행 결과:**
+```
+1번째 줄입니다.
+
+2번째 줄입니다.
+
+3번째 줄입니다.
+
+4번째 줄입니다.
+
+5번째 줄입니다.
+
+6번째 줄입니다.
+
+7번째 줄입니다.
+
+8번째 줄입니다.
+
+9번째 줄입니다.
+
+10번째 줄입니다.
+
+문자열 파일에 쓰기
+```
+
+## 파일을 읽기
+
+### - readline 함수
+
+```python
+f = open("filereadwrite.txt", 'r')
+line = f.readline()
+print(line)
+f.close()
+```
+**실행 결과:**
+```
+1번째 줄입니다.
+```
+
+```python
+f = open("filereadwrite.txt", 'r')
+while True:
+    line = f.readline()
+    if not line: break
+    print(line)
+f.close()
+```
+**실행 결과:**
+```
+1번째 줄입니다.
+
+2번째 줄입니다.
+
+3번째 줄입니다.
+
+4번째 줄입니다.
+
+5번째 줄입니다.
+
+6번째 줄입니다.
+
+7번째 줄입니다.
+
+8번째 줄입니다.
+
+9번째 줄입니다.
+
+10번째 줄입니다.
+
+문자열 파일에 쓰기
+```
+
+### - readlines 함수
+
+```python
+f = open("filereadwrite.txt", 'r')
+lines = f.readlines()
+print(lines)
+f.close()
+```
+**실행 결과:**
+```
+['1번째 줄입니다.\n', '2번째 줄입니다.\n', '3번째 줄입니다.\n', '4번째 줄입니다.\n', '5번째 줄입니다.\n', '6번째 줄입니다.\n', '7번째 줄입니다.\n', '8번째 줄입니다.\n', '9번째 줄입니다.\n', '10번째 줄입니다.\n', '문자열 파일에 쓰기']
+```
+
+```python
+f = open("filereadwrite.txt", 'r')
+lines = f.readlines()
+for line in lines:
+    print(line)
+f.close()
+```
+**실행 결과:**
+```
+1번째 줄입니다.
+
+2번째 줄입니다.
+
+3번째 줄입니다.
+
+4번째 줄입니다.
+
+5번째 줄입니다.
+
+6번째 줄입니다.
+
+7번째 줄입니다.
+
+8번째 줄입니다.
+
+9번째 줄입니다.
+
+10번째 줄입니다.
+
+문자열 파일에 쓰기
+```
+
+### - read 함수
+
+```python
+f = open("filereadwrite.txt", 'r')
+data = f.read()
+print(data)
+f.close()
+```
+**실행 결과:**
+```
+1번째 줄입니다.
+2번째 줄입니다.
+3번째 줄입니다.
+4번째 줄입니다.
+5번째 줄입니다.
+6번째 줄입니다.
+7번째 줄입니다.
+8번째 줄입니다.
+9번째 줄입니다.
+10번째 줄입니다.
+문자열 파일에 쓰기
+```
+
+### - 파일 객체를 for 문과 사용하기
+#### * 비추천
+
+```python
+f = open("filereadwrite.txt", 'r')
+for line in f:
+    print(line)
+f.close()
+```
+**실행 결과:**
+```
+1번째 줄입니다.
+
+2번째 줄입니다.
+
+3번째 줄입니다.
+
+4번째 줄입니다.
+
+5번째 줄입니다.
+
+6번째 줄입니다.
+
+7번째 줄입니다.
+
+8번째 줄입니다.
+
+9번째 줄입니다.
+
+10번째 줄입니다.
+
+문자열 파일에 쓰기
+```
+
+## 파일에 새로운 내용 추가
+- 'a' 모드를 사용하면 기존 내용 뒤에 내용 추가 가능
+
+```python
+f = open("filereadwrite.txt",'a')
+f.write('\n')
+for i in range(11, 20):
+    data = "%d번째 줄입니다.\n" % i
+    f.write(data)
+f.close()
+```
+
+## with 문 사용
+#### - close를 호출하지 않아도 with문 종료 시 열린 파일 f가 닫힘
+
+```python
+with open("difficult.txt", 'w') as f:
+    f. write("I like Python. But it is difficult")
+```
+
+## * 파일 처리 시 주의사항
+- 한글이 포함된 파일을 다룰 때는 인코딩 명시
+
+```python
+#한글 파일 쓰기
+with open("한글파일.txt", "w", encoding="utf-8") as f:
+    f.write("안녕하세요, 파이썬!")
+
+# 한글 파일 읽기
+with open("한글파일.txt", "r", encoding="utf-8") as f:
+    content = f.read()
+    print(content)
+```
+**실행 결과:**
+```
+안녕하세요, 파이썬!
+```
+

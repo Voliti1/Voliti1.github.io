@@ -1,0 +1,130 @@
+## API란?
+API(Application Programming Interface) : 서로 다른 소프트웨어 시스템 간에 정보를 주고받거나 기능을 사용할 수 있도록 도와주는 서비스
+<br>* 요청하면 필요한 데이터를 보내주는 자동화된 시스템
+
+### 아침루틴 만들기
+
+```python
+import requests
+from datetime import datetime
+from IPython.display import Image, display
+
+# 1. 고양이 사진
+def cat():
+    url = "https://api.thecatapi.com/v1/images/search"
+    response = requests.get(url)
+    data = response.json()
+    cat_url = data[0]['url']
+    print("\n 오늘의 고양이 사진:")
+    display(Image(url=cat_url, width=300))
+
+# 2. 안성 날씨
+def weather():
+    latitude = 37.008229
+    longitude = 127.176435
+    today = datetime.now().date()
+    url = (
+        f"https://api.open-meteo.com/v1/forecast?"
+        f"latitude={latitude}&longitude={longitude}"
+        f"&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FSeoul"
+    )
+    response = requests.get(url)
+    data = response.json()
+    dates = data['daily']['time']
+    max_temps = data['daily']['temperature_2m_max']
+    min_temps = data['daily']['temperature_2m_min']
+
+    for i, date in enumerate(dates):
+        if date == str(today):
+            print(f" 오늘({today}) 안성 날씨")
+            print(f"- 최고 기온: {max_temps[i]}°C")
+            print(f"- 최저 기온: {min_temps[i]}°C")
+            break
+
+# 3. 명언
+def quote():
+    url = "https://zenquotes.io/api/random"
+    response = requests.get(url)
+    data = response.json()
+    q = data[0]['q']
+    a = data[0]['a']
+    print(f"\n오늘의 명언:\n\"{q}\" — {a}")
+
+# 4. 비트코인
+def bitcoin(my_api_key):
+    headers = {
+        "accept": "application/json",
+        "x-cg-demo-api-key": my_api_key
+    }
+
+    url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=krw&include_24hr_change=true"
+    
+    try:
+        response = requests.get(url, headers=headers)
+        data = response.json()
+        
+        price = data['bitcoin']['krw']
+        change = data['bitcoin']['krw_24h_change']
+        
+        print("\n 오늘의 비트코인 시세:")
+        print(f"- 현재가: {price:,} 원")
+        print(f"- 24시간 전 대비: {change:.2f}%")
+    except Exception as e:
+        print(f"\n 코인 정보를 가져오지 못했습니다. 키를 확인해주세요! ({e})")
+
+def exchange(api_key):
+    url = f"https://v6.exchangerate-api.com/v6/{api_key}/latest/USD"
+    
+    try:
+        response = requests.get(url)
+        data = response.json()
+        
+        if data['result'] == 'success':
+            #원 환율
+            krw_rate = data['conversion_rates']['KRW']
+            #엔 환율
+            jpy_rate = data['conversion_rates']['JPY']
+            
+            print("\n 오늘의 주요 환율 (1달러 기준):")
+            print(f"- 원화(KRW): {krw_rate:,.2f} 원")
+            print(f"- 엔화(JPY): {jpy_rate:,.2f} 엔")
+        else:
+            print("\n 환율 정보를 가져오는 데 실패했습니다.")
+    except Exception as e:
+        print(f"\n 환율 API 오류: {e}")
+
+# --- 실행 부분 ---
+def routine():
+    # 본인의 API 키를 여기에 따옴표와 함께 적어주세요.
+    COINGECKO_KEY = "CG-7mqZbiz3nYywVujDqebq9hSK" 
+    EXCHANGE_KEY = "15bdace19a4bef38a5c7f870"
+
+    weather()
+    exchange(EXCHANGE_KEY)
+    bitcoin(COINGECKO_KEY)
+    quote()
+    cat()
+
+routine()
+```
+**실행 결과:**
+```
+오늘(2026-03-26) 안성 날씨
+- 최고 기온: 16.5°C
+- 최저 기온: 2.8°C
+
+ 오늘의 주요 환율 (1달러 기준):
+- 원화(KRW): 1,501.66 원
+- 엔화(JPY): 159.19 엔
+
+ 오늘의 비트코인 시세:
+- 현재가: 105,371,778 원
+- 24시간 전 대비: -1.31%
+
+오늘의 명언:
+"A day without laughter is a day wasted." — Charlie Chaplin
+
+ 오늘의 고양이 사진:
+<IPython.core.display.Image object>
+```
+

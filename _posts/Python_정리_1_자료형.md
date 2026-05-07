@@ -1,3 +1,9 @@
+---
+layout: post
+title: "Python 정리 1 - 자료형"
+date: 2024-05-07
+permalink: /python-study-data-types/
+---
 # Python(파이썬)
 
 
