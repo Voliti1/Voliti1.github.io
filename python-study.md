@@ -9,6 +9,6 @@ permalink: /python-study/
 
 {% for post in site.posts %}
   {% if post.category == "python-study" %}
-    * [cite_start][{{ post.title }}]({{ post.url }}) - {{ post.date | date: "%Y-%m-%d" }} [cite: 307, 310]
+    * [{{ post.title }}]({{ post.url }}) - {{ post.date | date: "%Y-%m-%d" }}
   {% endif %}
 {% endfor %}
