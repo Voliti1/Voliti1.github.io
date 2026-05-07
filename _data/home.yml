@@ -36,7 +36,7 @@ project_entries:
     desc: It also has a scalable vertical list (in case you need it)
 
 footer_entries:
-  - title: github
+  - title: Github
     url: https://github.com/Voliti1
 
 
