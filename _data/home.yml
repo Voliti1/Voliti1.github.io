@@ -10,7 +10,7 @@ navbar_entries:
 
 project_entries:
   - title: Python-Study
-    url: /python-study/
+    url: https://voliti1.github.io/Study-Notes/
     desc: 파이썬 기초 학습 목록
 
   - title: Project 2
