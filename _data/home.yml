@@ -4,8 +4,8 @@ navbar_entries:
 
 project_entries:
   - title: Python-Study
-    url: https://voliti1.github.io/Study-Notes/python/
-    desc: Just the Docs 테마로 정리한 파이썬 학습 노트
+    url: https://voliti1.github.io/Study-Notes2/
+    desc: GitBook 테마로 정리한 파이썬 학습 노트
 
   - title: Project 2
     url: overview-post
