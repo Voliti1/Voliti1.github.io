@@ -180,10 +180,52 @@ function setupEventListeners() {
     btnSelectShape.addEventListener('click', () => browseFolder(shapeDirInput, shapeDirInput.value));
     btnSelectModified.addEventListener('click', () => browseFolder(modifiedDirInput, modifiedDirInput.value));
 
-    dropZone.addEventListener('click', () => {
-        const dummyExcel = new File(["dummy"], "MK700_Rev2_R축_설계데이터.xlsm", { type: "application/octet-stream" });
-        const dummyPdf = new File(["dummy"], "MK700_Rev2_R축_도면.pdf", { type: "application/pdf" });
-        handleFiles([dummyExcel, dummyPdf]);
+    dropZone.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // 1. Ensure configuration paths are set (if not, set default paths first)
+        if (!originalDirInput.value || !shapeDirInput.value || !modifiedDirInput.value) {
+            await setDefaultPaths();
+        }
+        
+        // 2. Auto-increment part number starting from TEST001-A-01
+        let testCount = Number(localStorage.getItem('adms_autotest_count') || '0') + 1;
+        localStorage.setItem('adms_autotest_count', testCount);
+        
+        const partNo = `TEST${String(testCount).padStart(3, '0')}-A-01`;
+        const excelNameStr = `${partNo}_설계데이터.xlsm`;
+        const pdfNameStr = `${partNo}_도면.pdf`;
+        
+        // 3. Set mock files
+        excelFile = new File(["dummy"], excelNameStr, { type: "application/octet-stream" });
+        pdfFile = new File(["dummy"], pdfNameStr, { type: "application/pdf" });
+        
+        excelName.textContent = excelFile.name;
+        excelMeta.textContent = formatBytes(excelFile.size);
+        excelStatus.textContent = '불러옴';
+        excelStatus.className = 'file-status-badge loaded';
+        excelBox.classList.add('active');
+        
+        pdfName.textContent = pdfFile.name;
+        pdfMeta.textContent = formatBytes(pdfFile.size);
+        pdfStatus.textContent = '불러옴';
+        pdfStatus.className = 'file-status-badge loaded';
+        pdfBox.classList.add('active');
+        
+        // 4. Set extracted part number
+        extractedPartNumber = partNo;
+        partNumberValue.textContent = extractedPartNumber;
+        updateSavePathsPreview();
+        
+        // Store in session storage for the process endpoint to fetch
+        sessionStorage.setItem('adms_extracted_part', extractedPartNumber);
+        sessionStorage.setItem('adms_excel_filename', excelFile.name);
+        
+        checkReadyState();
+        
+        // 5. Immediately run processFiles()
+        await processFiles();
     });
     
     fileInput.addEventListener('change', (e) => {

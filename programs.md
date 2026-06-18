@@ -20,7 +20,7 @@ permalink: /programs/
       </span>
       <hr />
       <p class="body">
-        부품 재고 관리 및 발주 시스템 (Smart Tool Management System)
+        부품 재고관리 시스템 (Smart Tool Management System)
       </p>
     </a>
   </li>
@@ -31,7 +31,7 @@ permalink: /programs/
       </span>
       <hr />
       <p class="body">
-        자동 설계 및 도면 관리 시스템 (Automated Drawing Management System)
+        데이터 저장 및 수정 자동화 시스템 (Automated Drawing Management System)
       </p>
     </a>
   </li>

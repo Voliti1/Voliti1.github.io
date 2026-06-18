@@ -31,9 +31,9 @@
         {
             id: "entry_mock_1",
             timestamp: "2026-06-18 10:15:32",
-            part_number: "MK700-R-01",
-            excel_original: "MK700_Rev2_R축_설계데이터.xlsm",
-            pdf_original: "MK700_Rev2_R축_도면.pdf",
+            part_number: "TEST002-A-01",
+            excel_original: "TEST002-A-01_설계데이터.xlsm",
+            pdf_original: "TEST002-A-01_도면.pdf",
             original_dir: "C:\\ADMS\\Original",
             status: "success",
             corrected_items: [
@@ -66,9 +66,9 @@
         {
             id: "entry_mock_2",
             timestamp: "2026-06-17 14:20:11",
-            part_number: "MK700-R-02",
-            excel_original: "MK700_Rev2_L축_설계데이터.xlsm",
-            pdf_original: "MK700_Rev2_L축_도면.pdf",
+            part_number: "TEST001-A-01",
+            excel_original: "TEST001-A-01_설계데이터.xlsm",
+            pdf_original: "TEST001-A-01_도면.pdf",
             original_dir: "C:\\ADMS\\Original",
             status: "success",
             corrected_items: [] // No corrections (all within limits)
@@ -81,6 +81,9 @@
         }
         if (!localStorage.getItem('adms_history')) {
             localStorage.setItem('adms_history', JSON.stringify(MOCK_HISTORY_INIT));
+        }
+        if (!localStorage.getItem('adms_autotest_count')) {
+            localStorage.setItem('adms_autotest_count', '2');
         }
     }
 
@@ -288,6 +291,7 @@
         // 9. POST /api/history/clear
         if (urlStr.includes('/api/history/clear') && options && options.method === 'POST') {
             localStorage.setItem('adms_history', JSON.stringify([]));
+            localStorage.setItem('adms_autotest_count', '0');
             return new Response(JSON.stringify({
                 success: true,
                 message: "이력이 전체 삭제되었습니다."
