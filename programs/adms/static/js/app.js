@@ -223,9 +223,6 @@ function setupEventListeners() {
         sessionStorage.setItem('adms_excel_filename', excelFile.name);
         
         checkReadyState();
-        
-        // 5. Immediately run processFiles()
-        await processFiles();
     });
     
     fileInput.addEventListener('change', (e) => {
