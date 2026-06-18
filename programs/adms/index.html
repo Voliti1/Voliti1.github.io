@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>데이터 저장 및 수정 자동화 시스템</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="./adms-mock.js"></script>
+    <link rel="stylesheet" href="./static/css/style.css">
+</head>
+<body>
+    <div class="background-decorations">
+        <div class="glow-sphere glow-1"></div>
+        <div class="glow-sphere glow-2"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-area">
+                <span class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 17L12 22L22 17" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 12L12 17L22 12" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <defs>
+                            <linearGradient id="logoGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#8B5CF6"/>
+                                <stop offset="1" stop-color="#06B6D4"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </span>
+                <span class="logo-text">ADMS</span>
+            </div>
+            <h1>데이터 저장 및 수정 자동화 시스템</h1>
+            <p class="subtitle">엑셀 파일 품번(D11)을 추출하여 파일 이름 변경 및 저장을 수행합니다</p>
+        </header>
+
+        <!-- Main Dashboard -->
+        <main class="dashboard-grid">
+            
+            <!-- Left Panel: Control and Drop Zone -->
+            <section class="panel-left">
+                <div class="glass-card config-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h2 style="margin-bottom: 0;"><span class="step-num">1</span> 저장 폴더 경로 설정</h2>
+                        <div style="display: flex; gap: 8px;">
+                            <button type="button" id="btnSetDefaultPaths" class="btn-action btn-view-action" style="padding: 6px 12px; font-size: 0.8rem; height: auto; border-radius: 8px; font-weight: 600; background: rgba(6, 182, 212, 0.12); color: var(--accent-teal); border: 1px solid rgba(6, 182, 212, 0.25);">기본 경로로 설정</button>
+                            <button type="button" id="btnOpenPresetModal" class="btn-action btn-view-action" style="padding: 6px 12px; font-size: 0.8rem; height: auto; border-radius: 8px; font-weight: 600;">프리셋 관리</button>
+                        </div>
+                    </div>
+                    <div class="config-form">
+                        <!-- Original Excel folder selection -->
+                        <div class="input-group">
+                            <label for="originalDirInput">원본 엑셀파일 저장할 폴더</label>
+                            <div class="input-with-btn">
+                                <input type="text" id="originalDirInput" placeholder="경로를 지정해 주세요." readonly>
+                                <button type="button" class="btn btn-browse" id="btnSelectOriginal">찾아보기</button>
+                            </div>
+                        </div>
+
+                        <!-- Shape PDF folder selection -->
+                        <div class="input-group">
+                            <label for="shapeDirInput">형상 파일의 폴더</label>
+                            <div class="input-with-btn">
+                                <input type="text" id="shapeDirInput" placeholder="경로를 지정해 주세요." readonly>
+                                <button type="button" class="btn btn-browse" id="btnSelectShape">찾아보기</button>
+                            </div>
+                        </div>
+
+                        <!-- Modified Excel folder selection -->
+                        <div class="input-group">
+                            <label for="modifiedDirInput">수정본 엑셀 파일 저장 폴더</label>
+                            <div class="input-with-btn">
+                                <input type="text" id="modifiedDirInput" placeholder="경로를 지정해 주세요." readonly>
+                                <button type="button" class="btn btn-browse" id="btnSelectModified">찾아보기</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card drop-card">
+                    <h2><span class="step-num">2</span> 파일 드래그 앤 드롭</h2>
+                    <p class="instructions">엑셀 원본파일(.xlsm)과 도면 PDF(.pdf) 파일을 함께 드래그하여 놓으세요.</p>
+                    
+                    <div id="dropZone" class="drop-zone">
+                        <div class="drop-zone-content">
+                            <div class="drop-icon">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                            </div>
+                            <h3>파일을 여기로 끌어다 놓으세요</h3>
+                            <p>또는 <span>컴퓨터에서 파일 선택</span></p>
+                            <input type="file" id="fileInput" multiple accept=".xlsm, .pdf" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Preview and Execution -->
+            <section class="panel-right">
+                <div class="glass-card preview-card">
+                    <h2>인식된 파일 정보 및 저장 경로 프리뷰</h2>
+                    
+                    <div class="file-pair-preview">
+                        <!-- Excel preview -->
+                        <div class="file-item-box" id="excelBox">
+                            <div class="file-icon excel">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="8" y1="13" x2="16" y2="13"></line>
+                                    <line x1="8" y1="17" x2="16" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                            </div>
+                            <div class="file-info">
+                                <div class="file-name" id="excelName">엑셀 파일이 준비되지 않았습니다.</div>
+                                <div class="file-meta" id="excelMeta">파일을 드롭해 주세요 (.xlsm)</div>
+                            </div>
+                            <div class="file-status-badge" id="excelStatus">대기 중</div>
+                        </div>
+
+                        <!-- Extracted Part Number display -->
+                        <div class="part-number-display glass-inner">
+                            <div class="label">추출된 품번 (엑셀 D11)</div>
+                            <div class="value" id="partNumberValue">---</div>
+                            <div class="spinner" id="parsingSpinner" style="display: none;"></div>
+                        </div>
+
+                        <!-- PDF preview -->
+                        <div class="file-item-box" id="pdfBox">
+                            <div class="file-icon pdf">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                            </div>
+                            <div class="file-info">
+                                <div class="file-name" id="pdfName">PDF 파일이 준비되지 않았습니다.</div>
+                                <div class="file-meta" id="pdfMeta">파일을 드롭해 주세요 (.pdf)</div>
+                            </div>
+                            <div class="file-status-badge" id="pdfStatus">대기 중</div>
+                        </div>
+                    </div>
+
+                    <!-- Output Paths Preview -->
+                    <div class="paths-preview-box">
+                        <h3>예상 저장 파일명 및 경로</h3>
+                        <div class="path-item">
+                            <span class="path-label">엑셀 원본 저장 경로:</span>
+                            <code id="excelSavePath">경로 미지정</code>
+                        </div>
+                        <div class="path-item">
+                            <span class="path-label">도면 형상 저장 경로:</span>
+                            <code id="pdfSavePath">경로 미지정</code>
+                        </div>
+                        <div class="path-item">
+                            <span class="path-label">수정본 엑셀 저장 경로:</span>
+                            <code id="modifiedSavePath">경로 미지정</code>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="action-bar">
+                        <button id="resetBtn" class="btn btn-secondary">초기화</button>
+                        <button id="processBtn" class="btn btn-primary" disabled>
+                            <span class="btn-text">저장 실행</span>
+                            <span class="btn-spinner" style="display: none;"></span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- History & Status Section -->
+        <section class="glass-card history-card">
+            <div class="history-header">
+                <h2>처리 이력</h2>
+                <div class="history-header-actions" style="display: flex; gap: 10px; align-items: center;">
+                    <!-- 검색 바 및 달력 추가 -->
+                    <div class="search-box" style="display: flex; gap: 6px; align-items: center;">
+                        <input type="date" id="historyDateInput" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-inner); color: var(--text-main); font-size: 0.85rem; outline: none; transition: var(--transition-smooth); cursor: pointer;">
+                        <input type="text" id="historySearchInput" placeholder="처리일시, 품번, 파일명 검색..." style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-inner); color: var(--text-main); font-size: 0.85rem; width: 220px; outline: none; transition: var(--transition-smooth);">
+                        <button id="btnSearchHistory" class="btn-action btn-view-action" style="padding: 8px 14px; font-size: 0.85rem; border-radius: 8px; height: auto;">검색</button>
+                    </div>
+                    <button id="deleteSelectedHistoryBtn" class="btn btn-text" style="font-size: 0.85rem; padding: 6px 12px;">선택 삭제</button>
+                    <button id="clearHistoryBtn" class="btn btn-text btn-text-danger" style="color: var(--accent-red) !important; font-size: 0.85rem; padding: 6px 12px;">이력 전체 삭제</button>
+                </div>
+            </div>
+            <div class="history-table-container">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px; text-align: center;">
+                                <input type="checkbox" id="checkAllHistory" style="cursor: pointer; transform: scale(1.1);">
+                            </th>
+                            <th>처리 일시</th>
+                            <th>추출 품번</th>
+                            <th>업로드 엑셀</th>
+                            <th>업로드 PDF</th>
+                            <th>대상 폴더</th>
+                            <th>삭제</th>
+                            <th>수정이력</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody">
+                        <tr>
+                            <td colspan="8" class="no-history">처리 이력이 없습니다.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 페이지네이션 컨트롤 추가 -->
+            <div class="pagination-container" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 16px; font-size: 0.85rem;">
+                <button id="btnPrevPage" class="btn-action btn-view-action" style="padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; height: auto;">이전</button>
+                <span id="pageInfo" style="color: var(--text-muted); font-weight: 500; font-family: monospace; font-size: 0.9rem;">1 / 1</span>
+                <button id="btnNextPage" class="btn-action btn-view-action" style="padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; height: auto;">다음</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Preset Modal Component -->
+    <div id="presetModal" class="modal">
+        <div class="modal-content glass-inner">
+            <div class="modal-header">
+                <h3 style="font-family: var(--font-outfit); font-weight: 700; color: var(--text-main); font-size: 1.15rem;">저장 경로 프리셋 관리</h3>
+                <span id="btnClosePresetModal" style="cursor: pointer; color: var(--text-muted); font-size: 1.5rem; line-height: 1; font-weight: bold;">&times;</span>
+            </div>
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 16px;">
+                <!-- 수동 추가 양식 -->
+                <div class="input-group" style="gap: 6px;">
+                    <label for="newPresetPathInput" style="font-size: 0.85rem; font-weight: 500; color: var(--text-muted);">폴더 경로 수동 추가</label>
+                    <div class="input-with-btn">
+                        <input type="text" id="newPresetPathInput" placeholder="추가할 폴더 경로를 입력해주세요" style="background: var(--bg-inner); color: var(--text-main); font-size: 0.8rem; border-radius: 6px; padding: 8px 12px;">
+                        <button type="button" id="btnBrowsePreset" class="btn btn-browse" style="padding: 8px 12px; font-size: 0.8rem; border-radius: 6px; height: auto; flex-shrink: 0;">찾아보기</button>
+                        <button type="button" id="btnAddPreset" class="btn-action btn-view-action" style="padding: 8px 16px; border-radius: 6px; height: auto; font-size: 0.8rem; flex-shrink: 0;">추가</button>
+                    </div>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <h4 style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin: 0;">등록된 경로 목록 (최대 10개)</h4>
+                    <div id="presetListContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; padding-right: 4px;">
+                        <!-- JS에서 동적 로드 -->
+                        <div style="font-size: 0.8rem; color: var(--text-dark); text-align: center; padding: 20px;">등록된 프리셋 경로가 없습니다.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Toast Component -->
+    <div id="toast" class="toast">
+        <div class="toast-content">
+            <div class="toast-icon" id="toastIcon"></div>
+            <div class="toast-message" id="toastMessage">메시지 내용</div>
+        </div>
+    </div>
+
+    <script src="./static/js/app.js"></script>
+</body>
+</html>

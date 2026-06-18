@@ -3,31 +3,17 @@ navbar_entries:
     url: about
 
 project_entries:
+  - title: Programs
+    url: /programs/
+    desc: Voliti가 만들어본 프로그램들을 모아놓은 공간입니다.
+
   - title: Python-Study
     url: https://voliti1.github.io/Study-Notes/
     desc: GitBook 테마로 정리한 파이썬 학습 노트
 
-  - title: Project 2
-    url: overview-post
-    desc: Projects are shown in card layout
-
-  - title: Project 3
-    url: overview-post
-    desc: You can control visibility from _config.yml file
-
-  - title: Project 4
-    url: overview-post
-    desc: This project uses highlight markup, configured in _data/home.yml
-    highlight: WIP
-
-  - title: Project 5
-    url: overview-post
-    desc: Moonwalk also has horizontal list (used in header and footer)
-    highlight: WIP
-
-  - title: Project 6
-    url: overview-post
-    desc: It also has a scalable vertical list (in case you need it)
+  - title: SQL
+    url: https://voliti1.github.io/Study-Notes/sql/
+    desc: SQL 공부 내용 및 쿼리 연습 정리 자료
 
 footer_entries:
   - title: Github
