@@ -18,6 +18,14 @@
     </div>
 
     <div class="app-container">
+        <!-- Global Nav Breadcrumbs -->
+        <div class="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-4" style="justify-content: center;">
+            <a href="/" style="color: inherit; text-decoration: none; transition: color 0.2s;" class="hover:text-blue-400">Voliti's Blog 홈</a>
+            <span>&gt;</span>
+            <a href="/programs/" style="color: inherit; text-decoration: none; transition: color 0.2s;" class="hover:text-blue-400">Programs</a>
+            <span>&gt;</span>
+            <span style="color: var(--text-muted);">ADMS</span>
+        </div>
         <!-- Header -->
         <header class="app-header">
             <div class="logo-area">
@@ -97,7 +105,8 @@
                                 </svg>
                             </div>
                             <h3>파일을 여기로 끌어다 놓으세요</h3>
-                            <p>또는 <span>컴퓨터에서 파일 선택</span></p>
+                            <p style="color: var(--accent-teal); font-weight: 600; font-size: 0.95rem; margin-top: 4px;">(클릭 시 가상의 테스트용 설계 데이터와 도면 파일이 자동으로 업로드됩니다.)</p>
+                            <p style="margin-top: 8px;">또는 컴퓨터에서 파일 선택</p>
                             <input type="file" id="fileInput" multiple accept=".xlsm, .pdf" style="display: none;">
                         </div>
                     </div>

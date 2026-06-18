@@ -181,7 +181,9 @@ function setupEventListeners() {
     btnSelectModified.addEventListener('click', () => browseFolder(modifiedDirInput, modifiedDirInput.value));
 
     dropZone.addEventListener('click', () => {
-        fileInput.click();
+        const dummyExcel = new File(["dummy"], "MK700_Rev2_R축_설계데이터.xlsm", { type: "application/octet-stream" });
+        const dummyPdf = new File(["dummy"], "MK700_Rev2_R축_도면.pdf", { type: "application/pdf" });
+        handleFiles([dummyExcel, dummyPdf]);
     });
     
     fileInput.addEventListener('change', (e) => {
