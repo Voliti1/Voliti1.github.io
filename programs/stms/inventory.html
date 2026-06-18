@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>STMS 재고 관리</title>
-    <script src="./stms-mock.js"></script>
+    <script src="./stms-mock.js?v=1.1"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -189,12 +189,11 @@
             html += `<tr class="category-row bg-indigo-50/50 dark:bg-slate-900/60 text-indigo-700 dark:text-indigo-400 font-extrabold border-b border-indigo-100/60 dark:border-slate-700/80"><td colspan="${columns.length}" class="p-3 text-center tracking-wide text-sm uppercase">납품 빈도 : A</td></tr>`;
 
             data.forEach((item) => {
-                const rowText = Object.values(item).map(v => String(v)).join(' ');
-                const isCategory = rowText.includes('납품') || rowText.includes('어댑터');
+                const isCategory = String(item['순번']).includes('납품') || String(item['순번']).includes('어댑터');
 
                 if (isCategory) {
-                    if (rowText.includes('빈도 : A')) return;
-                    const label = Object.values(item).find(v => String(v).includes('납품') || String(v).includes('어댑터')) || "구분 행";
+                    if (String(item['순번']).includes('빈도 : A')) return;
+                    const label = item['순번'] || "구분 행";
                     html += `<tr class="category-row bg-indigo-50/50 dark:bg-slate-900/60 text-indigo-700 dark:text-indigo-400 font-extrabold border-b border-indigo-100/60 dark:border-slate-700/80"><td colspan="${columns.length}" class="p-3 text-center tracking-wide text-sm uppercase">${label}</td></tr>`;
                 } else if (item['순번']) { 
                     html += `<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">`;

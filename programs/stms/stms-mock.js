@@ -223,7 +223,10 @@
             const sales = JSON.parse(localStorage.getItem('stms_sales_data_v4') || '{}');
             const uploadedHistory = JSON.parse(localStorage.getItem('stms_uploaded_history_v4') || '[]');
             
-            const partsOnly = inv.filter(item => item['신품번'] && item['순번'] && !item['순번'].includes('납품') && !item['순번'].includes('어댑터'));
+            const partsOnly = inv.filter(item => {
+                const idx = Number(item['순번']);
+                return item['신품번'] && !isNaN(idx) && idx >= 1 && idx <= 15;
+            });
             if (partsOnly.length === 0) {
                 return new Response(JSON.stringify({ error: 'No parts found in inventory database' }), { status: 500 });
             }
