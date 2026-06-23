@@ -7,13 +7,9 @@ project_entries:
     url: /programs/
     desc: Voliti가 만들어본 프로그램들을 모아놓은 공간입니다.
 
-  - title: Python-Study
+  - title: Study-Notes
     url: https://voliti1.github.io/Study-Notes/
-    desc: GitBook 테마로 정리한 파이썬 학습 노트
-
-  - title: SQL
-    url: https://voliti1.github.io/Study-Notes/sql/
-    desc: SQL 공부 내용 및 쿼리 연습 정리 자료
+    desc: GitBook 테마로 정리한 학습 노트 (Python, SQL, C, C#, JAVA, 소프트웨어 공학 등)
 
 footer_entries:
   - title: Github
