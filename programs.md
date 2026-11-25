@@ -35,4 +35,15 @@ permalink: /programs/
       </p>
     </a>
   </li>
+  <li class="card">
+    <a href="./sct/">
+      <span class="header">
+        SCT
+      </span>
+      <hr />
+      <p class="body">
+        반도체 실습 장비 제어 GUI 웹 시뮬레이터 (C# WinForms → Web Mock)
+      </p>
+    </a>
+  </li>
 </ul>

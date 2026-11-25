@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SCT - 반도체 실습 장비 제어 GUI 시뮬레이터</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <div class="breadcrumbs">
+      <a href="/">Voliti's Blog 홈</a>
+      <span>&gt;</span>
+      <a href="/programs/">Programs</a>
+      <span>&gt;</span>
+      <span>SCT 장비 제어 시뮬레이터</span>
+    </div>
+
+    <div class="demo-toolbar">
+      <div class="demo-badge">
+        <span class="demo-pill">WEB SIMULATOR</span>
+        <span>C# WinForms (SCT_Form) → 브라우저 가상 EtherCAT 시뮬레이션</span>
+      </div>
+      <div class="demo-actions">
+        <label class="demo-speed">
+          공정 배속:
+          <select id="simSpeedSelect">
+            <option value="1">1x (실제 시간)</option>
+            <option value="3" selected>3x (빠른 데모)</option>
+            <option value="6">6x (초고속)</option>
+          </select>
+        </label>
+        <button type="button" class="demo-btn primary" id="btnQuickAdminLogin">관리자 빠른 로그인 (voliti)</button>
+        <button type="button" class="demo-btn" id="btnToggleMockFault">샘플 알람 발생</button>
+      </div>
+    </div>
+
+    <div class="hmi-window">
+      <!-- Top Bar (pnl_Top) -->
+      <header class="hmi-topbar">
+        <div class="topbar-title">실습 장비<br />제어 GUI</div>
+
+        <div class="topbar-login" id="loginSlot">
+          <!-- Dynamically switched between Login inputs and LoginState -->
+        </div>
+
+        <div class="topbar-pm">
+          <div class="pm-head">PM A</div>
+          <div class="pm-head">PM B</div>
+          <div class="pm-head">PM C</div>
+          <div class="pm-dot" id="topPmADot">●</div>
+          <div class="pm-dot" id="topPmBDot">●</div>
+          <div class="pm-dot" id="topPmCDot">●</div>
+        </div>
+
+        <div class="topbar-conn">
+          <div class="conn-label">Connection</div>
+          <div class="conn-dot connected" id="topConnDot">●</div>
+          <button type="button" class="hmi-btn" id="btnReconnect">RECONNECT</button>
+        </div>
+
+        <div class="topbar-datetime">
+          <div id="lblDate">----.--.--</div>
+          <div id="lblTime">--:--:--</div>
+        </div>
+
+        <div class="topbar-alarm">
+          <button type="button" class="hmi-btn" id="btnAlarmReset">Alarm<br />Reset</button>
+        </div>
+      </header>
+
+      <!-- Main Panel (Mainpnl) -->
+      <main class="hmi-main">
+        <!-- 1. OPERATE VIEW -->
+        <section class="view-pane active" id="view-operate">
+          <div class="operate-grid">
+            <div class="cluster-stage">
+              <div class="cluster-map">
+                <!-- PM B (Top) -->
+                <div class="pm-row-top">
+                  <div class="pm-box" id="boxPMB">
+                    <div class="pm-box-head" id="headPMB">PM B</div>
+                    <div class="wafer-slot-circle" id="waferPMB">Empty</div>
+                  </div>
+                </div>
+
+                <!-- PM A (Left) + Robot (Center) + PM C (Right) -->
+                <div class="pm-row-mid">
+                  <div class="pm-box" id="boxPMA">
+                    <div class="pm-box-head" id="headPMA">PM A</div>
+                    <div class="wafer-slot-circle" id="waferPMA">Empty</div>
+                  </div>
+
+                  <div class="robot-canvas-wrap">
+                    <canvas id="robotCanvas" width="250" height="250"></canvas>
+                    <div class="robot-facing-badge">
+                      <span id="robotFacingLabel">Target: FOUP A</span>
+                      <span id="robotWaferLabel">Wafer: None</span>
+                    </div>
+                  </div>
+
+                  <div class="pm-box" id="boxPMC">
+                    <div class="pm-box-head" id="headPMC">PM C</div>
+                    <div class="wafer-slot-circle" id="waferPMC">Empty</div>
+                  </div>
+                </div>
+
+                <!-- FOUP A & FOUP B -->
+                <div class="foup-row">
+                  <div>
+                    <div class="foup-col-title">FOUP A</div>
+                    <div class="foup-slots" id="foupASlots"></div>
+                  </div>
+                  <div class="foup-info-table">
+                    <div>Lot ID</div><div>L001</div>
+                    <div>Lock Status</div><div>Clamped</div>
+                  </div>
+                  <div></div>
+                  <div>
+                    <div class="foup-col-title">FOUP B</div>
+                    <div class="foup-slots" id="foupBSlots"></div>
+                  </div>
+                  <div class="foup-info-table">
+                    <div>Lot ID</div><div>L002</div>
+                    <div>Lock Status</div><div>Clamped</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Process Control Buttons -->
+              <div class="process-controls-bar">
+                <div class="recipe-select-box">
+                  <span>Process Recipe</span>
+                  <select id="processRecipeSelect"></select>
+                </div>
+                <button type="button" class="op-big-btn start" id="btnStart">Start</button>
+                <button type="button" class="op-big-btn pause" id="btnPause" disabled>Pause</button>
+                <button type="button" class="op-big-btn continue" id="btnContinue" disabled>Continue</button>
+                <button type="button" class="op-big-btn abort" id="btnAbort" disabled>Abort</button>
+                <button type="button" class="op-big-btn init" id="btnInitialize">Initialize</button>
+              </div>
+            </div>
+
+            <!-- Right PM Info Cards -->
+            <div class="pm-panels-col" id="pmInfoCol"></div>
+          </div>
+        </section>
+
+        <!-- 2. MAINT VIEW -->
+        <section class="view-pane" id="view-maint">
+          <div class="maint-layout">
+            <div class="maint-top-row">
+              <div class="hmi-group" style="width: 240px;">
+                <div class="hmi-group-title">Robot Cylinder</div>
+                <div class="maint-2x2">
+                  <button type="button" class="hmi-btn maint-btn" id="btnCylFront">Move Front</button>
+                  <button type="button" class="hmi-btn maint-btn" id="btnCylBack">Move Back</button>
+                </div>
+              </div>
+
+              <div class="hmi-group" style="width: 310px;">
+                <div class="hmi-group-title">Axis Status</div>
+                <div style="display:grid; grid-template-columns:130px 1fr; gap:6px; font-size:12px; font-weight:700;">
+                  <div>UD current Pos :</div><div id="lblUDPos">0</div>
+                  <div>LR current Pos :</div><div id="lblLRPos">13140</div>
+                </div>
+              </div>
+
+              <div class="hmi-group" style="flex: 1; min-width: 250px;">
+                <div class="hmi-group-title">Chamber Door Sensors</div>
+                <div style="display:flex; gap:14px; font-size:12px; font-weight:700; padding-top:8px;">
+                  <span id="maintDoorLblA">A 도어 닫힘</span>
+                  <span id="maintDoorLblB">B 도어 닫힘</span>
+                  <span id="maintDoorLblC">C 도어 닫힘</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="hmi-group">
+              <div class="hmi-group-title">Robot Manual Control</div>
+              <div class="maint-4grid">
+                <div class="hmi-group">
+                  <div class="hmi-group-title">ROBOT Driver Control</div>
+                  <div class="maint-2x2">
+                    <button type="button" class="hmi-btn maint-btn" id="btnServoOn">Servo ON</button>
+                    <button type="button" class="hmi-btn maint-btn" id="btnServoOff">Servo OFF</button>
+                    <button type="button" class="hmi-btn maint-btn" id="btnUDBasic">UD Basic Point</button>
+                    <button type="button" class="hmi-btn maint-btn" id="btnLRBasic">LR Basic Point</button>
+                  </div>
+                </div>
+
+                <div class="hmi-group">
+                  <div class="hmi-group-title">ROBOT Axis Jog Control</div>
+                  <div style="display:flex; gap:6px; align-items:center; margin-bottom:8px; font-size:11px; font-weight:700;">
+                    <span>Distance</span>
+                    <input type="number" id="inputJogDist" value="50000" step="10000" style="width:100%; padding:4px;" />
+                  </div>
+                  <div class="maint-2x2">
+                    <button type="button" class="hmi-btn maint-btn" id="btnJogUp">Jog Move ↑</button>
+                    <button type="button" class="hmi-btn maint-btn" id="btnJogDown">Jog Move ↓</button>
+                    <button type="button" class="hmi-btn maint-btn" id="btnJogLeft">Jog Move ←</button>
+                    <button type="button" class="hmi-btn maint-btn" id="btnJogRight">Jog Move →</button>
+                  </div>
+                </div>
+
+                <div class="hmi-group">
+                  <div class="hmi-group-title">ROBOT Axis Control</div>
+                  <div style="display:flex; gap:6px; align-items:center; margin-bottom:8px; font-size:11px; font-weight:700;">
+                    <span>Target Pos</span>
+                    <input type="number" id="inputTargetPos" value="-59064" step="10000" style="width:100%; padding:4px;" />
+                  </div>
+                  <div class="maint-2x2">
+                    <button type="button" class="hmi-btn maint-btn" id="btnUDMove">UD Move</button>
+                    <button type="button" class="hmi-btn maint-btn" id="btnLRMove">LR Move</button>
+                  </div>
+                </div>
+
+                <div class="hmi-group">
+                  <div class="hmi-group-title">ROBOT Vacuum Control</div>
+                  <div class="maint-2x2">
+                    <button type="button" class="hmi-btn maint-btn" id="btnInOn">Inhalation ON</button>
+                    <button type="button" class="hmi-btn maint-btn" id="btnInOff">Inhalation OFF</button>
+                    <button type="button" class="hmi-btn maint-btn" id="btnExOn">Exhaust ON</button>
+                    <button type="button" class="hmi-btn maint-btn" id="btnExOff">Exhaust OFF</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="hmi-group">
+              <div class="hmi-group-title">Chamber and Lamp Manual Control</div>
+              <div class="maint-4grid">
+                <div class="hmi-group">
+                  <div class="hmi-group-title">Chamber A Manual Control</div>
+                  <div class="maint-chamber-grid">
+                    <div class="indicator-box" id="indDoorA">DOOR</div>
+                    <button type="button" class="hmi-btn" onclick="sctApp.manualDoor('PM A', true)">OPEN</button>
+                    <button type="button" class="hmi-btn" onclick="sctApp.manualDoor('PM A', false)">CLOSE</button>
+                    <div class="indicator-box" id="indLampA">LAMP</div>
+                    <button type="button" class="hmi-btn" onclick="sctApp.manualLamp('PM A', true)">ON</button>
+                    <button type="button" class="hmi-btn" onclick="sctApp.manualLamp('PM A', false)">OFF</button>
+                  </div>
+                </div>
+
+                <div class="hmi-group">
+                  <div class="hmi-group-title">Chamber B Manual Control</div>
+                  <div class="maint-chamber-grid">
+                    <div class="indicator-box" id="indDoorB">DOOR</div>
+                    <button type="button" class="hmi-btn" onclick="sctApp.manualDoor('PM B', true)">OPEN</button>
+                    <button type="button" class="hmi-btn" onclick="sctApp.manualDoor('PM B', false)">CLOSE</button>
+                    <div class="indicator-box" id="indLampB">LAMP</div>
+                    <button type="button" class="hmi-btn" onclick="sctApp.manualLamp('PM B', true)">ON</button>
+                    <button type="button" class="hmi-btn" onclick="sctApp.manualLamp('PM B', false)">OFF</button>
+                  </div>
+                </div>
+
+                <div class="hmi-group">
+                  <div class="hmi-group-title">Chamber C Manual Control</div>
+                  <div class="maint-chamber-grid">
+                    <div class="indicator-box" id="indDoorC">DOOR</div>
+                    <button type="button" class="hmi-btn" onclick="sctApp.manualDoor('PM C', true)">OPEN</button>
+                    <button type="button" class="hmi-btn" onclick="sctApp.manualDoor('PM C', false)">CLOSE</button>
+                    <div class="indicator-box" id="indLampC">LAMP</div>
+                    <button type="button" class="hmi-btn" onclick="sctApp.manualLamp('PM C', true)">ON</button>
+                    <button type="button" class="hmi-btn" onclick="sctApp.manualLamp('PM C', false)">OFF</button>
+                  </div>
+                </div>
+
+                <div class="hmi-group">
+                  <div class="hmi-group-title">Lamp Tower</div>
+                  <div class="maint-2x2">
+                    <button type="button" class="hmi-btn" onclick="sctApp.manualTower('all', true)">ALL ON</button>
+                    <button type="button" class="hmi-btn" onclick="sctApp.manualTower('all', false)">ALL OFF</button>
+                    <button type="button" class="hmi-btn" style="background:#fca5a5;" onclick="sctApp.manualTower('red', true)">Red ON</button>
+                    <button type="button" class="hmi-btn" style="background:#fca5a5;" onclick="sctApp.manualTower('red', false)">Red OFF</button>
+                    <button type="button" class="hmi-btn" style="background:#fef08a;" onclick="sctApp.manualTower('yellow', true)">Yellow ON</button>
+                    <button type="button" class="hmi-btn" style="background:#fef08a;" onclick="sctApp.manualTower('yellow', false)">Yellow OFF</button>
+                    <button type="button" class="hmi-btn" style="background:#86efac;" onclick="sctApp.manualTower('green', true)">Green ON</button>
+                    <button type="button" class="hmi-btn" style="background:#86efac;" onclick="sctApp.manualTower('green', false)">Green OFF</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. RECIPE VIEW -->
+        <section class="view-pane" id="view-recipe">
+          <div class="subnav-bar">
+            <button type="button" class="subnav-btn active" data-rtab="PM A">PM A (CVD)</button>
+            <button type="button" class="subnav-btn" data-rtab="PM B">PM B (CMP)</button>
+            <button type="button" class="subnav-btn" data-rtab="PM C">PM C (Cleaning)</button>
+            <button type="button" class="subnav-btn" data-rtab="Process">Process</button>
+          </div>
+          <div class="recipe-grid">
+            <div class="recipe-list" id="recipeList"></div>
+            <div class="recipe-actions">
+              <button type="button" class="hmi-btn" id="btnRecipeNew">New</button>
+              <button type="button" class="hmi-btn" id="btnRecipeSave">Save</button>
+              <button type="button" class="hmi-btn" id="btnRecipeDelete">Delete</button>
+              <button type="button" class="hmi-btn" id="btnRecipeReset">기본 레시피 복원</button>
+            </div>
+            <div class="recipe-fields" id="recipeEditor"></div>
+          </div>
+        </section>
+
+        <!-- 4. LOG VIEW -->
+        <section class="view-pane" id="view-log">
+          <div class="subnav-bar" style="justify-content: space-between;">
+            <div>
+              <button type="button" class="subnav-btn active" data-ltab="Alarm">Alarm</button>
+              <button type="button" class="subnav-btn" data-ltab="Full">Full Log</button>
+            </div>
+            <button type="button" class="subnav-btn" id="btnRandomAlarm">Create Random Alarm</button>
+          </div>
+
+          <div class="log-grid">
+            <div class="log-tables">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong id="logViewTitle" style="font-size:13px;">Alarm Log</strong>
+                <div style="display:flex; gap:6px;">
+                  <button type="button" class="hmi-btn" id="btnSortToggle">DESC</button>
+                </div>
+              </div>
+              <div class="log-table-wrap">
+                <table class="log-table">
+                  <thead>
+                    <tr>
+                      <th style="width:155px;">Time</th>
+                      <th style="width:95px;">Category</th>
+                      <th style="width:75px;">Level</th>
+                      <th>Message</th>
+                    </tr>
+                  </thead>
+                  <tbody id="logTableBody"></tbody>
+                </table>
+              </div>
+              <div class="log-detail-wrap">
+                <table class="log-table">
+                  <thead>
+                    <tr><th style="width:120px;">Field</th><th>Value</th></tr>
+                  </thead>
+                  <tbody id="logDetailBody">
+                    <tr><td colspan="2" style="color:#64748b;">로그 항목을 클릭하면 상세 정보가 표시됩니다.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="hmi-group" style="display:flex; flex-direction:column; gap:8px;">
+              <div class="hmi-group-title">Filter &amp; Actions</div>
+              <select id="filterLevel" style="padding:6px; border:1px solid #94a3b8;">
+                <option value="">Level: 전체</option>
+                <option value="INFO">INFO</option>
+                <option value="WARN">WARN</option>
+                <option value="ERROR">ERROR</option>
+                <option value="DEBUG">DEBUG</option>
+              </select>
+              <select id="filterCategory" style="padding:6px; border:1px solid #94a3b8;">
+                <option value="">Category: 전체</option>
+                <option value="INFO">INFO</option>
+                <option value="User">User</option>
+                <option value="Alarm">Alarm</option>
+                <option value="Maint">Maint</option>
+              </select>
+              <input type="text" id="filterKeyword" placeholder="Message 검색..." style="padding:6px; border:1px solid #94a3b8;" />
+              <button type="button" class="hmi-btn" id="btnLogSearch">Search</button>
+              <button type="button" class="hmi-btn" id="btnLogClearFilter">Clear Filter</button>
+              <button type="button" class="hmi-btn" id="btnLogExport">Log Export (CSV)</button>
+              <button type="button" class="hmi-btn" id="btnLogDelete">Log Delete</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. SETTING VIEW -->
+        <section class="view-pane" id="view-setting">
+          <div class="setting-grid">
+            <div class="hmi-group">
+              <div class="hmi-group-title">1. Transfer Robot Parameter</div>
+              <div class="setting-row"><label>Acceleration (가속도)</label><input type="number" id="setAccel" value="1000000" /></div>
+              <div class="setting-row"><label>Deceleration (감속도)</label><input type="number" id="setDecel" value="1000000" /></div>
+              <div class="setting-row"><label>Max Velocity (최대 속도)</label><input type="number" id="setMaxVelo" value="100000000" /></div>
+              <div class="setting-row"><label>Velocity (속도)</label><input type="number" id="setVelo" value="1000000" /></div>
+            </div>
+
+            <div class="hmi-group">
+              <div class="hmi-group-title">4. Recipe Management &amp; 5. Safety InterLock</div>
+              <div class="setting-row"><label>Door Open Interlock</label><select id="setDoorInterlock"><option value="true">True</option><option value="false">False</option></select></div>
+              <div class="setting-row"><label>Alarm Auto Stop</label><select id="setAlarmAutoStop"><option value="true">True</option><option value="false">False</option></select></div>
+              <div class="setting-row"><label>Auto Stop Alarm Level</label><select id="setAutoStopLevel"><option value="ERROR">ERROR</option><option value="WARN">WARN</option></select></div>
+              <div class="setting-row"><label>Mode Change Force Stop</label><select id="setModeForceStop"><option value="false">False</option><option value="true">True</option></select></div>
+            </div>
+
+            <div class="hmi-group">
+              <div class="hmi-group-title">2. Connection, EtherCAT &amp; 3. Log Setting</div>
+              <div class="setting-row"><label>EtherCAT Read Cycle(ms)</label><input type="number" id="setCycleMs" value="300" min="100" max="1000" /></div>
+              <div class="setting-row"><label>Reconnect Retry Count</label><input type="number" id="setRetry" value="3" min="0" max="10" /></div>
+              <div class="setting-row"><label>Connection TimeOut(ms)</label><input type="number" id="setTimeout" value="5000" /></div>
+              <div class="setting-row"><label>Show Debug Log</label><select id="setShowDebug"><option value="true">Yes</option><option value="false">No</option></select></div>
+            </div>
+
+            <div class="hmi-group">
+              <div class="hmi-group-title">6. Lamp Tower Status Mapping</div>
+              <div class="setting-row"><label>Idle Lamp Status</label><select id="setIdleLamp"><option>Yellow</option><option>Green</option><option>Red</option></select></div>
+              <div class="setting-row"><label>Run Lamp Status</label><select id="setRunLamp"><option>Green</option><option>Yellow</option><option>Red</option></select></div>
+              <div class="setting-row"><label>Alarm Lamp Status</label><select id="setAlarmLamp"><option>Red</option><option>Yellow</option><option>Green</option></select></div>
+              <div class="setting-row"><label>Maintenance Lamp Status</label><select id="setMaintLamp"><option>Yellow</option><option>Green</option><option>Red</option></select></div>
+              <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+                <button type="button" class="hmi-btn" id="btnSettingApply" style="padding:8px 18px; background:#dbeafe; border-color:#2563eb;">Apply</button>
+                <button type="button" class="hmi-btn" id="btnSettingCancel" style="padding:8px 18px;">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Bottom Navigation Bar (tableLayoutPanel5) -->
+      <footer class="hmi-bottombar">
+        <button type="button" class="mode-btn active" data-mode="Operate">Operate</button>
+        <button type="button" class="mode-btn" data-mode="Maint">MAINT</button>
+        <button type="button" class="mode-btn" data-mode="Recipe">RECIPE</button>
+        <button type="button" class="mode-btn" data-mode="Log">LOG</button>
+        <button type="button" class="mode-btn" data-mode="Setting">SETTING</button>
+        <div class="tower-status-strip">
+          <span>Tower Lamp</span>
+          <div class="tower-lamps">
+            <span class="tower-bulb red" id="towerRed" title="Red"></span>
+            <span class="tower-bulb yellow on" id="towerYellow" title="Yellow"></span>
+            <span class="tower-bulb green" id="towerGreen" title="Green"></span>
+          </div>
+          <span id="servoBadge">Servo: ON</span>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal-backdrop" id="loginModal">
+    <div class="modal-card">
+      <h3>SCT 로그인 (LogInGUI)</h3>
+      <p>데모 계정: <b>voliti / 1</b> (Admin) 또는 <b>voliti2 / 2</b> (Normal)</p>
+      <div class="modal-field">
+        <label for="modalUserId">ID</label>
+        <input type="text" id="modalUserId" value="voliti" />
+      </div>
+      <div class="modal-field">
+        <label for="modalPassword">PW</label>
+        <input type="password" id="modalPassword" value="1" />
+      </div>
+      <div class="modal-btns">
+        <button type="button" class="hmi-btn" id="btnModalCancel">취소</button>
+        <button type="button" class="hmi-btn" id="btnModalLogin" style="background:#dbeafe; border-color:#2563eb;">로그인</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="./sct-sim.js"></script>
+</body>
+</html>
