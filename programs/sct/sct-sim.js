@@ -10,6 +10,8 @@
     EtherCatReadCycleMs: 300,
     ReconnectRetryCount: 3,
     ConnectionTimeoutMs: 5000,
+    LogRetentionDays: 30,
+    MaxDisplayLogCount: 5000,
     ShowDebugLog: true,
     DoorOpenInterlock: true,
     AlarmAutoStop: true,
@@ -32,18 +34,17 @@
         RecipeType: "CVD",
         RecipeName: "CVD_1",
         PPID: "CVD_001",
-        Description: "",
-        CreatedBy: "User",
-        ModifiedDate: "2026-07-07 09:20:32",
         Fields: {
           "Recipe Name": "CVD_1",
-          PPID: "CVD_001",
           Description: "",
           "Process Time": "5",
           Temperature: "450",
           Pressure: "100",
           "Gas Flow": "100",
-          "RF Power": "100"
+          "RF Power": "100",
+          "Created By": "User",
+          "Modified Date": "2026-07-07 09:20:32",
+          "PP ID": "CVD_001"
         }
       },
       {
@@ -51,18 +52,17 @@
         RecipeType: "CVD",
         RecipeName: "CVD_Low",
         PPID: "CVD_002",
-        Description: "",
-        CreatedBy: "User",
-        ModifiedDate: "2026-07-04 19:11:34",
         Fields: {
           "Recipe Name": "CVD_Low",
-          PPID: "CVD_002",
           Description: "",
           "Process Time": "10",
           Temperature: "450",
           Pressure: "2.5",
           "Gas Flow": "100",
-          "RF Power": "300"
+          "RF Power": "300",
+          "Created By": "User",
+          "Modified Date": "2026-07-04 19:11:34",
+          "PP ID": "CVD_002"
         }
       }
     ],
@@ -72,19 +72,17 @@
         RecipeType: "CMP",
         RecipeName: "CMP_Low",
         PPID: "CMP_002",
-        Description: "",
-        CreatedBy: "User",
-        ModifiedDate: "2026-07-04 19:12:21",
         Fields: {
           "Recipe Name": "CMP_Low",
-          PPID: "CMP_002",
           Description: "",
           "Process Time": "10",
           "Platen Speed": "50",
           "Carrier Speed": "45",
           "Down Force": "2.0",
           "Slurry Flow": "100",
-          "Pad Type": "Soft"
+          "Pad Type": "Soft",
+          "Created By": "User",
+          "PP ID": "CMP_002"
         }
       },
       {
@@ -92,19 +90,17 @@
         RecipeType: "CMP",
         RecipeName: "CMP_Medium",
         PPID: "CMP_001",
-        Description: "",
-        CreatedBy: "User",
-        ModifiedDate: "2026-07-04 19:03:01",
         Fields: {
           "Recipe Name": "CMP_Medium",
-          PPID: "CMP_001",
           Description: "",
           "Process Time": "45",
           "Platen Speed": "50",
           "Carrier Speed": "45",
           "Down Force": "2.0",
           "Slurry Flow": "100",
-          "Pad Type": "Soft"
+          "Pad Type": "Soft",
+          "Created By": "User",
+          "PP ID": "CMP_001"
         }
       }
     ],
@@ -114,19 +110,17 @@
         RecipeType: "Cleaning",
         RecipeName: "Cleaning_Low",
         PPID: "Clean_002",
-        Description: "",
-        CreatedBy: "User",
-        ModifiedDate: "2026-07-04 19:13:15",
         Fields: {
           "Recipe Name": "Cleaning_Low",
-          PPID: "Clean_002",
           Description: "",
           "Process Time": "10",
           "Cleaning Mode": "DI",
           "DI Water Flow": "1.5",
           "Chemical Flow": "0",
           "Spin Speed": "800",
-          "Dry Time": "5"
+          "Dry Time": "5",
+          "Created By": "User",
+          "PP ID": "Clean_002"
         }
       },
       {
@@ -134,19 +128,17 @@
         RecipeType: "Cleaning",
         RecipeName: "Cleaning_Medium",
         PPID: "Clean_001",
-        Description: "",
-        CreatedBy: "User",
-        ModifiedDate: "2026-07-04 19:03:15",
         Fields: {
           "Recipe Name": "Cleaning_Medium",
-          PPID: "Clean_001",
           Description: "",
           "Process Time": "30",
           "Cleaning Mode": "DI",
           "DI Water Flow": "1.5",
           "Chemical Flow": "0",
           "Spin Speed": "800",
-          "Dry Time": "10"
+          "Dry Time": "10",
+          "Created By": "User",
+          "PP ID": "Clean_001"
         }
       }
     ],
@@ -217,8 +209,8 @@
     connected: true,
     servoOn: true,
     account: null,
-    settings: loadStorage("sct_settings_v1", DEFAULT_SETTINGS),
-    recipes: loadStorage("sct_recipes_v1", DEFAULT_RECIPES),
+    settings: loadStorage("sct_settings_v2", DEFAULT_SETTINGS),
+    recipes: loadStorage("sct_recipes_v2", DEFAULT_RECIPES),
     selectedProcessName: "ABC",
     recipeTab: "PM A",
     selectedRecipeIdx: 0,
@@ -233,7 +225,6 @@
     robot: {
       ud: 0,
       lr: 13140,
-      targetLr: 13140,
       cylForward: false,
       cylBack: true,
       hasWafer: false,
@@ -243,22 +234,29 @@
     foupA: [true, true, true, true, true],
     foupB: [false, false, false, false, false],
     pms: {
-      "PM A": { doorOpen: false, lampOn: false, lampBlink: false, hasWafer: false, recipe: "-", step: "-", rTime: "0 / 0", sTime: "0 / 0", stepNum: "0 / 0 step", msg: "Idle", progress: 0, status: "idle" },
-      "PM B": { doorOpen: false, lampOn: false, lampBlink: false, hasWafer: false, recipe: "-", step: "-", rTime: "0 / 0", sTime: "0 / 0", stepNum: "0 / 0 step", msg: "Idle", progress: 0, status: "idle" },
-      "PM C": { doorOpen: false, lampOn: false, lampBlink: false, hasWafer: false, recipe: "-", step: "-", rTime: "0 / 0", sTime: "0 / 0", stepNum: "0 / 0 step", msg: "Idle", progress: 0, status: "idle" }
+      "PM A": { doorOpen: false, lampOn: false, lampBlink: false, hasWafer: false, recipe: "", step: "", rTime: "0 / 0", sTime: "0 / 0", stepNum: "0 / 0 step", msg: "", progress: 0, status: "idle" },
+      "PM B": { doorOpen: false, lampOn: false, lampBlink: false, hasWafer: false, recipe: "", step: "", rTime: "0 / 0", sTime: "0 / 0", stepNum: "0 / 0 step", msg: "", progress: 0, status: "idle" },
+      "PM C": { doorOpen: false, lampOn: false, lampBlink: false, hasWafer: false, recipe: "", step: "", rTime: "0 / 0", sTime: "0 / 0", stepNum: "0 / 0 step", msg: "", progress: 0, status: "idle" }
     },
     seq: {
       running: false,
       paused: false,
       steps: [],
-      idx: 0,
-      waitRemaining: 0,
-      totalProcessSec: 0,
-      elapsedTotalSec: 0
+      idx: 0
     }
   };
 
   let simTimer = null;
+
+  function fitStage() {
+    const vp = document.getElementById("stageViewport");
+    const win = document.getElementById("winformsWindow");
+    if (!vp || !win) return;
+    const avail = vp.clientWidth;
+    const scale = Math.min(1, avail / 1000);
+    win.style.transform = `scale(${scale})`;
+    vp.style.height = `${Math.ceil(850 * scale)}px`;
+  }
 
   function nowStrings() {
     const d = new Date();
@@ -310,7 +308,7 @@
 
   function ensureOperationAllowed() {
     if (!state.account) {
-      showToast("장비 동작을 하려면 로그인해주세요. (상단 또는 '관리자 빠른 로그인' 클릭)");
+      showToast("장비 동작을 하려면 로그인해주세요");
       openLoginModal();
       return false;
     }
@@ -319,14 +317,14 @@
       return false;
     }
     if (state.axisFault) {
-      showToast("UD 축 위치 오류(Axis Position Fault) 상태입니다. Alarm Reset 후 시도하세요.");
+      showToast("UD 축 위치 확인 실패로 장비 동작이 차단되었습니다. Alarm Reset 후 다시 시도하세요.");
       return false;
     }
     if (state.settings.DoorOpenInterlock) {
       const openPm = Object.keys(state.pms).find((k) => state.pms[k].doorOpen);
       if (openPm) {
-        writeLog("Alarm", "WARN", `Door Open Interlock: ${openPm} 도어가 열려 있어 동작 차단`);
-        showToast(`Door Open Interlock 상태입니다. ${openPm} 도어를 닫은 후 동작해주세요.`);
+        writeLog("Alarm", "WARN", `Door Open Interlock: ${openPm} 도어 열림으로 동작 차단`);
+        showToast("Door Open Interlock 상태입니다. Chamber Door를 닫은 후 동작해주세요.");
         return false;
       }
     }
@@ -335,9 +333,15 @@
 
   function ensureAdminAllowed() {
     if (state.account && state.account.UserLevel === "Admin") return true;
-    showToast("설정을 변경하려면 관리자(voliti / 1) 계정으로 로그인해주세요.");
+    showToast("설정을 하려면 관리자 계정으로 로그인해주세요");
     openLoginModal();
     return false;
+  }
+
+  function moveRobotTo(targetName, ud) {
+    const t = EQUIPMENT_TARGETS.find((x) => x.name === targetName);
+    if (t) state.robot.lr = t.lr;
+    if (typeof ud === "number") state.robot.ud = ud;
   }
 
   function buildAutoSequence(processRecipe) {
@@ -350,10 +354,9 @@
       const slotNum = slot + 1;
       const firstPm = recipeSteps[0].Module;
 
-      // 1. Pick from FOUP A
       steps.push({
         module: firstPm,
-        desc: `FOUP A 슬롯 ${slotNum} 웨이퍼 픽업 이동`,
+        desc: `${firstPm} load from FOUP A (slot ${slotNum})`,
         action: () => {
           moveRobotTo("FOUP A", FOUP_UD[slot]);
           state.robot.cylForward = true;
@@ -362,18 +365,17 @@
       });
       steps.push({
         module: firstPm,
-        desc: `FOUP A 슬롯 ${slotNum} 진공 흡착`,
+        desc: `FOUP A slot ${slotNum} pick`,
         action: () => {
           state.foupA[slot] = false;
           state.robot.hasWafer = true;
           state.robot.vacuumOn = true;
           state.robot.cylForward = false;
           state.robot.cylBack = true;
-          writeLog("INFO", "INFO", `Auto Process: FOUP A Slot ${slotNum} Wafer Pick`);
+          writeLog("INFO", "INFO", `Auto Process: FOUP A slot ${slotNum} pick`);
         }
       });
 
-      // 2. Process each PM in order
       recipeSteps.forEach((step, idx) => {
         const mod = step.Module;
         const sec = Math.max(2, Number(step.ProcessTime || 10));
@@ -387,7 +389,7 @@
 
         steps.push({
           module: mod,
-          desc: `${mod} 이동 및 도어 열림`,
+          desc: `${mod} door open`,
           action: () => {
             moveRobotTo(mod, 1156931);
             state.pms[mod].doorOpen = true;
@@ -395,13 +397,13 @@
             state.pms[mod].step = pmMeta.stepName;
             state.pms[mod].stepNum = pmMeta.stepNum;
             state.pms[mod].status = "running";
-            state.pms[mod].msg = `${mod} loading wafer`;
+            state.pms[mod].msg = `${mod} loading`;
           }
         });
 
         steps.push({
           module: mod,
-          desc: `${mod} 웨이퍼 투입 및 도어 닫힘`,
+          desc: `${mod} place & door close`,
           action: () => {
             state.robot.cylForward = true;
             state.robot.cylBack = false;
@@ -422,12 +424,12 @@
           module: mod,
           seconds: sec,
           meta: pmMeta,
-          desc: `${mod} 공정 진행 중 (${step.RecipeName})`
+          desc: `${mod} process running`
         });
 
         steps.push({
           module: mod,
-          desc: `${mod} 공정 완료 및 언로드`,
+          desc: `${mod} process complete`,
           action: () => {
             state.pms[mod].lampOn = false;
             state.pms[mod].lampBlink = true;
@@ -436,18 +438,17 @@
             state.robot.hasWafer = true;
             state.robot.vacuumOn = true;
             state.pms[mod].doorOpen = false;
-            state.pms[mod].msg = `${mod} process complete`;
+            state.pms[mod].msg = "process complete";
             state.pms[mod].status = "idle";
             writeLog("INFO", "INFO", `Auto Process: ${mod} (${step.RecipeName}) 완료`);
           }
         });
       });
 
-      // 3. Place into FOUP B
       const lastPm = recipeSteps[recipeSteps.length - 1].Module;
       steps.push({
         module: lastPm,
-        desc: `FOUP B 슬롯 ${slotNum} 적재`,
+        desc: `${lastPm} unload to FOUP B (slot ${slotNum})`,
         action: () => {
           moveRobotTo("FOUP B", FOUP_UD[slot]);
           state.robot.cylForward = true;
@@ -457,23 +458,11 @@
           state.foupB[slot] = true;
           state.robot.cylForward = false;
           state.robot.cylBack = true;
-          writeLog("INFO", "INFO", `Auto Process: FOUP B Slot ${slotNum} Wafer Unload 완료`);
+          writeLog("INFO", "INFO", `Auto Process: FOUP B slot ${slotNum} unload`);
         }
       });
     }
-
     return steps;
-  }
-
-  function moveRobotTo(targetName, ud) {
-    const t = EQUIPMENT_TARGETS.find((x) => x.name === targetName);
-    if (t) {
-      state.robot.lr = t.lr;
-      state.robot.targetLr = t.lr;
-    }
-    if (typeof ud === "number") {
-      state.robot.ud = ud;
-    }
   }
 
   function stepSimulationTick() {
@@ -483,33 +472,23 @@
       finishSequence();
       return;
     }
-
     if (step.kind === "wait") {
       const mod = step.module;
       const pm = state.pms[mod];
       step.elapsed = (step.elapsed || 0) + 1;
-      state.seq.elapsedTotalSec += 1;
       const pct = Math.min(100, Math.round((step.elapsed / step.seconds) * 100));
       pm.sTime = `${step.elapsed} / ${step.seconds}`;
       pm.rTime = `${Math.min(step.meta.rTotal, step.elapsed)} / ${step.meta.rTotal}`;
       pm.progress = pct;
-      pm.msg = `${mod} process running (${step.elapsed}/${step.seconds}s)`;
-
-      if (step.elapsed >= step.seconds) {
-        state.seq.idx += 1;
-      }
+      pm.msg = `${mod} process running`;
+      if (step.elapsed >= step.seconds) state.seq.idx += 1;
     } else {
       if (step.action) step.action();
-      if (step.module && state.pms[step.module]) {
-        state.pms[step.module].msg = step.desc;
-      }
+      if (step.module && state.pms[step.module]) state.pms[step.module].msg = step.desc;
       state.seq.idx += 1;
     }
-
     renderAll();
-    if (state.seq.idx >= state.seq.steps.length) {
-      finishSequence();
-    }
+    if (state.seq.idx >= state.seq.steps.length) finishSequence();
   }
 
   function finishSequence() {
@@ -523,15 +502,14 @@
       state.pms[k].status = "idle";
     });
     applyTowerForMode();
-    writeLog("INFO", "INFO", "전체 웨이퍼(5매) 자동 공정 시퀀스 완료!");
-    showToast("자동 공정 시퀀스(5매)가 모두 완료되었습니다.");
+    writeLog("INFO", "INFO", "자동 공정 시퀀스(5슬롯) 완료");
+    showToast("자동 공정 시퀀스(5매) 완료");
     renderAll();
   }
 
   function startSequenceLoop() {
     clearInterval(simTimer);
-    const intervalMs = Math.max(150, Math.round(1000 / state.speed));
-    simTimer = setInterval(stepSimulationTick, intervalMs);
+    simTimer = setInterval(stepSimulationTick, Math.max(150, Math.round(1000 / state.speed)));
   }
 
   function drawRobotCanvas() {
@@ -542,7 +520,6 @@
     const h = canvas.height;
     ctx.clearRect(0, 0, w, h);
 
-    // Find nearest target angle
     let nearest = EQUIPMENT_TARGETS[3];
     let minDiff = Infinity;
     for (const t of EQUIPMENT_TARGETS) {
@@ -553,22 +530,20 @@
       }
     }
     const isAligned = minDiff <= 5000;
-    const gripCenterY = state.robot.cylForward && !state.robot.cylBack ? -98 : -62;
+    const gripCenterY = state.robot.cylForward && !state.robot.cylBack ? -98 : -60;
 
     ctx.save();
     ctx.translate(w / 2, h / 2);
     ctx.rotate((nearest.angle * Math.PI) / 180);
 
-    // Body
     ctx.fillStyle = "#eef1f6";
-    ctx.strokeStyle = "#000";
+    ctx.strokeStyle = "#000000";
     ctx.lineWidth = 4;
     ctx.fillRect(-14, -34, 28, 72);
     ctx.fillStyle = "#ced6e0";
     ctx.fillRect(3, -30, 8, 64);
     ctx.strokeRect(-14, -34, 28, 72);
 
-    // Arm
     ctx.beginPath();
     ctx.moveTo(0, -30);
     ctx.lineTo(0, gripCenterY + 22);
@@ -577,7 +552,6 @@
     ctx.lineCap = "round";
     ctx.stroke();
 
-    // End effector / wafer
     ctx.beginPath();
     ctx.arc(0, gripCenterY, 24, 0, Math.PI * 2);
     ctx.fillStyle = state.robot.hasWafer ? "#ffd700" : "#ffffff";
@@ -587,9 +561,6 @@
     ctx.stroke();
 
     ctx.restore();
-
-    document.getElementById("robotFacingLabel").textContent = `Target: ${nearest.name}`;
-    document.getElementById("robotWaferLabel").textContent = `Wafer: ${state.robot.hasWafer ? "Loaded" : "None"}`;
   }
 
   function renderTopBar() {
@@ -598,38 +569,32 @@
     document.getElementById("lblTime").textContent = dt.time;
 
     const connDot = document.getElementById("topConnDot");
-    connDot.className = "conn-dot" + (state.connected ? " connected" : "");
+    connDot.className = "wf-lbl conn-dot" + (state.connected ? " connected" : "");
 
     const pmDotIds = { "PM A": "topPmADot", "PM B": "topPmBDot", "PM C": "topPmCDot" };
     Object.keys(pmDotIds).forEach((pm) => {
       const el = document.getElementById(pmDotIds[pm]);
-      if (state.activeAlarms.has(pm)) {
-        el.style.color = "#dc2626";
-      } else if (state.pms[pm].status === "running") {
-        el.style.color = "#16a34a";
-      } else {
-        el.style.color = "#6b7280";
-      }
+      el.style.color = state.activeAlarms.has(pm) ? "#ff0000" : state.pms[pm].status === "running" ? "#16a34a" : "#808080";
     });
 
     const loginSlot = document.getElementById("loginSlot");
     if (!state.account) {
       loginSlot.innerHTML = `
-        <div class="login-grid" id="loginTrigger">
-          <div class="cell-head">ID</div>
-          <div class="cell-head">PW</div>
-          <input type="text" readonly placeholder="Click Login" />
-          <input type="password" readonly placeholder="****" />
+        <div class="pnl-login" id="loginTrigger">
+          <div style="font-size:12px; font-weight:700;">ID</div>
+          <div style="font-size:12px; font-weight:700;">PW</div>
+          <div><input type="text" readonly /></div>
+          <div><input type="password" readonly /></div>
         </div>`;
       document.getElementById("loginTrigger").addEventListener("click", openLoginModal);
     } else {
       loginSlot.innerHTML = `
-        <div class="login-state-box">
-          <div class="login-state-info">
-            <strong>${state.account.UserId} (${state.account.UserName})</strong>
-            <span>${state.account.UserLevel}</span>
-          </div>
-          <button type="button" class="hmi-btn" id="btnLogout">Logout</button>
+        <div class="pnl-login-state">
+          <div>Login ID</div>
+          <div>Level</div>
+          <div class="logout-cell"><button type="button" class="wf-btn" id="btnLogout" style="width:100%; height:100%; font-size:14px; font-weight:700;">Log Out</button></div>
+          <div>${state.account.UserId}</div>
+          <div>${state.account.UserLevel}</div>
         </div>`;
       document.getElementById("btnLogout").addEventListener("click", () => {
         writeLog("User", "INFO", `로그아웃: ${state.account.UserId}`);
@@ -648,63 +613,49 @@
   }
 
   function renderOperate() {
-    // Process recipe dropdown
     const sel = document.getElementById("processRecipeSelect");
     sel.innerHTML = state.recipes.Process.map((r) => `<option value="${r.RecipeName}" ${r.RecipeName === state.selectedProcessName ? "selected" : ""}>${r.RecipeName}</option>`).join("");
 
-    // PM visual boxes
-    const map = [
-      { key: "PM A", box: "boxPMA", head: "headPMA", wafer: "waferPMA" },
-      { key: "PM B", box: "boxPMB", head: "headPMB", wafer: "waferPMB" },
-      { key: "PM C", box: "boxPMC", head: "headPMC", wafer: "waferPMC" }
-    ];
-    map.forEach((m) => {
-      const pm = state.pms[m.key];
-      const box = document.getElementById(m.box);
-      const head = document.getElementById(m.head);
-      const wafer = document.getElementById(m.wafer);
-      box.className = "pm-box" + (pm.lampOn ? " lamp-on" : "") + (pm.lampBlink ? " lamp-blink" : "");
-      head.className = "pm-box-head" + (pm.doorOpen ? " door-open" : "");
-      wafer.className = "wafer-slot-circle" + (pm.hasWafer ? " has-wafer" : "");
+    [["PM A", "PMA"], ["PM B", "PMB"], ["PM C", "PMC"]].forEach(([key, suf]) => {
+      const pm = state.pms[key];
+      document.getElementById(`box${suf}`).className = "op-pm-box" + (pm.lampOn ? " lamp-on" : "") + (pm.lampBlink ? " lamp-blink" : "");
+      document.getElementById(`head${suf}`).className = "op-pm-title" + (pm.doorOpen ? " door-open" : "");
+      const wafer = document.getElementById(`wafer${suf}`);
+      wafer.className = "op-wafer-circle" + (pm.hasWafer ? " has-wafer" : "");
       wafer.textContent = pm.hasWafer ? "Wafer" : "Empty";
     });
 
-    // FOUP A & B slots
-    const foupAEl = document.getElementById("foupASlots");
-    const foupBEl = document.getElementById("foupBSlots");
-    foupAEl.innerHTML = state.foupA.map((full, i) => `<div class="foup-slot ${full ? "full" : ""}">Slot ${i + 1}</div>`).join("");
-    foupBEl.innerHTML = state.foupB.map((full, i) => `<div class="foup-slot ${full ? "full" : ""}">Slot ${i + 1}</div>`).join("");
+    document.getElementById("foupASlots").innerHTML = state.foupA.map((full) => `<div class="op-foup-slot ${full ? "full" : ""}"></div>`).join("");
+    document.getElementById("foupBSlots").innerHTML = state.foupB.map((full) => `<div class="op-foup-slot ${full ? "full" : ""}"></div>`).join("");
 
-    // Buttons
     document.getElementById("btnStart").disabled = state.seq.running;
     document.getElementById("btnPause").disabled = !state.seq.running || state.seq.paused;
     document.getElementById("btnContinue").disabled = !state.seq.running || !state.seq.paused;
     document.getElementById("btnAbort").disabled = !state.seq.running;
     document.getElementById("btnInitialize").disabled = state.seq.running;
 
-    // Right PM cards
+    const tops = { "PM A": 29, "PM B": 233, "PM C": 439 };
     const col = document.getElementById("pmInfoCol");
     col.innerHTML = ["PM A", "PM B", "PM C"]
       .map((name) => {
         const pm = state.pms[name];
-        const dotCls = state.activeAlarms.has(name) ? "alarm" : pm.status === "running" ? "running" : "";
+        const dotColor = state.activeAlarms.has(name) ? "#ff0000" : pm.status === "running" ? "#16a34a" : "#808080";
+        const doorTxt = pm.doorOpen ? "Door Open" : "Door Close";
         return `
-        <div class="pm-card">
-          <div class="pm-card-top">
+        <div class="op-pm-info" style="top:${tops[name]}px; ${name === "PM C" ? "height:187px;" : ""}">
+          <div class="op-pm-info-top">
             <span>${name}</span>
-            <span>${pm.doorOpen ? "Door Open" : "Door Close"}</span>
-            <span class="dot ${dotCls}">●</span>
+            <span style="font-size:16px; color:${pm.doorOpen ? "#b45309" : "#555"};">${doorTxt}</span>
+            <span style="color:${dotColor};">●</span>
           </div>
-          <div class="pm-card-body">
-            <div></div><div class="hdr">RECIPE</div><div class="hdr">STEP</div>
-            <div class="lbl">Name</div><div>${pm.recipe}</div><div>${pm.step}</div>
-            <div class="lbl">Time(sec)</div><div>${pm.rTime}</div><div>${pm.sTime}</div>
-            <div class="lbl">Message</div><div class="span2">${pm.stepNum}</div>
-            <div class="msg-row">${pm.msg}</div>
-            <div class="lbl">Progress</div>
-            <div class="pm-progress-wrap">
-              <div class="pm-progress-bar"><div class="pm-progress-fill" style="width:${pm.progress}%"></div></div>
-            </div>
+          <div></div><div class="teal-hdr">RECIPE</div><div class="teal-hdr">STEP</div>
+          <div>Name</div><div>${pm.recipe}</div><div>${pm.step}</div>
+          <div>Time(sec)</div><div>${pm.rTime}</div><div>${pm.sTime}</div>
+          <div>Message</div><div></div><div>${pm.stepNum}</div>
+          <div class="msg-content">${pm.msg}</div>
+          <div>Progress</div>
+          <div class="prog-cell">
+            <div class="op-prog-track"><div class="op-prog-fill" style="width:${pm.progress}%"></div></div>
           </div>
         </div>`;
       })
@@ -733,9 +684,9 @@
     if (state.selectedRecipeIdx >= items.length) state.selectedRecipeIdx = 0;
 
     listEl.innerHTML = items
-      .map((r, i) => `<div class="recipe-item ${i === state.selectedRecipeIdx ? "active" : ""}" data-ridx="${i}"><span>${r.RecipeName}</span><span style="color:#64748b;font-size:11px;">${r.PPID || ""}</span></div>`)
+      .map((r, i) => `<div class="recipe-row-item ${i === state.selectedRecipeIdx ? "active" : ""}" data-ridx="${i}"><span>${r.RecipeName}</span><span>${r.PPID || ""}</span></div>`)
       .join("");
-    listEl.querySelectorAll(".recipe-item").forEach((el) => {
+    listEl.querySelectorAll(".recipe-row-item").forEach((el) => {
       el.addEventListener("click", () => {
         state.selectedRecipeIdx = Number(el.dataset.ridx);
         renderRecipes();
@@ -744,7 +695,7 @@
 
     const cur = items[state.selectedRecipeIdx];
     if (!cur) {
-      editorEl.innerHTML = `<p style="color:#64748b;">선택된 레시피가 없습니다. New 버튼을 눌러 생성하세요.</p>`;
+      editorEl.innerHTML = "";
       return;
     }
 
@@ -752,30 +703,27 @@
       const stepsHtml = (cur.Steps || [])
         .map(
           (st, idx) => `
-          <div class="field-row">
-            <label>Step ${idx + 1} (${st.Module})</label>
-            <div style="display:flex; gap:6px;">
-              <input type="text" data-pstep="${idx}" data-pkey="RecipeName" value="${st.RecipeName}" style="flex:1;" />
-              <input type="number" data-pstep="${idx}" data-pkey="ProcessTime" value="${st.ProcessTime}" style="width:80px;" />
-            </div>
+          <div class="r-lbl">Step ${idx + 1} (${st.Module})</div>
+          <div class="r-inp-wrap" style="gap:4px;">
+            <input type="text" data-pstep="${idx}" data-pkey="RecipeName" value="${st.RecipeName}" />
+            <input type="number" data-pstep="${idx}" data-pkey="ProcessTime" value="${st.ProcessTime}" style="width:60px;" />
           </div>`
         )
         .join("");
       editorEl.innerHTML = `
-        <div class="field-row"><label>Recipe Name</label><input type="text" id="edProcName" value="${cur.RecipeName}" /></div>
-        <div class="field-row"><label>PPID</label><input type="text" id="edProcPPID" value="${cur.PPID || ""}" /></div>
+        <div class="r-lbl">Recipe Name</div><div class="r-inp-wrap"><input type="text" id="edProcName" value="${cur.RecipeName}" /></div>
+        <div class="r-lbl">PPID</div><div class="r-inp-wrap"><input type="text" id="edProcPPID" value="${cur.PPID || ""}" /></div>
         ${stepsHtml}`;
     } else {
       const fields = cur.Fields || {};
       editorEl.innerHTML = Object.keys(fields)
-        .map((k) => `<div class="field-row"><label>${k}</label><input type="text" data-rfield="${k}" value="${fields[k]}" /></div>`)
+        .map((k) => `<div class="r-lbl">${k}</div><div class="r-inp-wrap"><input type="text" data-rfield="${k}" value="${fields[k]}" /></div>`)
         .join("");
     }
   }
 
   function renderLogs() {
-    const titleEl = document.getElementById("logViewTitle");
-    titleEl.textContent = state.logTab === "Alarm" ? "Alarm Log" : "Full Log";
+    document.getElementById("logViewTitle").textContent = state.logTab === "Alarm" ? "Alarm Log" : "Full Log";
     document.getElementById("btnSortToggle").textContent = state.logDesc ? "DESC" : "ASC";
 
     const fLevel = document.getElementById("filterLevel").value;
@@ -798,9 +746,9 @@
       .map(
         (r) => `
       <tr class="${r.id === state.selectedLogId ? "selected" : ""}" data-lid="${r.id}">
-        <td>${r.time}</td>
-        <td>${r.category}</td>
-        <td class="log-level-${r.level}">${r.level}</td>
+        <td style="text-align:center;">${r.time}</td>
+        <td style="text-align:center;">${r.category}</td>
+        <td style="text-align:center;" class="lvl-${r.level}">${r.level}</td>
         <td>${r.message}</td>
       </tr>`
       )
@@ -817,10 +765,10 @@
     const sel = state.logs.find((l) => l.id === state.selectedLogId);
     if (sel) {
       detailEl.innerHTML = `
-        <tr><td>Time</td><td>${sel.time}</td></tr>
-        <tr><td>Category</td><td>${sel.category}</td></tr>
-        <tr><td>Level</td><td>${sel.level}</td></tr>
-        <tr><td>Message</td><td>${sel.message}</td></tr>`;
+        <tr><td style="text-align:center;">Time</td><td>${sel.time}</td></tr>
+        <tr><td style="text-align:center;">Category</td><td>${sel.category}</td></tr>
+        <tr><td style="text-align:center;">Level</td><td>${sel.level}</td></tr>
+        <tr><td style="text-align:center;">Message</td><td>${sel.message}</td></tr>`;
     }
   }
 
@@ -836,6 +784,8 @@
     document.getElementById("setCycleMs").value = state.settings.EtherCatReadCycleMs;
     document.getElementById("setRetry").value = state.settings.ReconnectRetryCount;
     document.getElementById("setTimeout").value = state.settings.ConnectionTimeoutMs;
+    document.getElementById("setLogDays").value = state.settings.LogRetentionDays;
+    document.getElementById("setMaxLogs").value = state.settings.MaxDisplayLogCount;
     document.getElementById("setShowDebug").value = String(state.settings.ShowDebugLog);
     document.getElementById("setIdleLamp").value = state.settings.IdleLampStatus;
     document.getElementById("setRunLamp").value = state.settings.RunLampStatus;
@@ -889,9 +839,9 @@
       return false;
     }
     state.account = acc;
-    writeLog("User", "INFO", `로그인: ${acc.UserId} (${acc.UserLevel})`);
+    writeLog("User", "INFO", `로그인: ${acc.UserId}`);
     closeLoginModal();
-    showToast(`${acc.UserId} (${acc.UserLevel}) 계정으로 로그인되었습니다.`);
+    showToast(`${acc.UserId} (${acc.UserLevel}) 로그인 완료`);
     renderAll();
     return true;
   }
@@ -909,10 +859,25 @@
     renderAll();
   }
 
-  // Public helpers for inline maint onclicks
+  function checkCylLock() {
+    if (state.robot.cylForward) {
+      showToast("웨이퍼 이송 실린더가 전진되어 있어 이동할 수 없습니다.");
+      return true;
+    }
+    return false;
+  }
+
+  function checkSoftLimit() {
+    if (state.robot.ud > AXIS1_SOFT_LIMIT) {
+      state.axisFault = true;
+      raiseAlarm("PM A", "ERROR", `UD 축 상한 소프트 리밋(${AXIS1_SOFT_LIMIT}) 초과 -> 동작 차단`);
+    }
+  }
+
   window.sctApp = {
     manualDoor(pmName, open) {
-      if (!ensureOperationAllowedForDoor(open)) return;
+      if (!state.account) { openLoginModal(); return; }
+      if (open && !ensureOperationAllowed()) return;
       state.pms[pmName].doorOpen = open;
       writeLog("Maint", "INFO", `${pmName} 도어 ${open ? "OPEN" : "CLOSE"} 완료`);
       renderAll();
@@ -926,24 +891,28 @@
     },
     manualTower(color, on) {
       if (!ensureOperationAllowed()) return;
-      if (color === "all") {
-        state.tower.red = state.tower.yellow = state.tower.green = on;
-      } else {
-        state.tower[color] = on;
-      }
+      if (color === "all") state.tower.red = state.tower.yellow = state.tower.green = on;
+      else state.tower[color] = on;
       writeLog("Maint", "INFO", `Tower Lamp ${color.toUpperCase()} ${on ? "ON" : "OFF"}`);
       renderTower();
+    },
+    teachLR(pos, label) {
+      if (!ensureOperationAllowed() || checkCylLock()) return;
+      state.robot.lr = pos;
+      writeLog("Maint", "INFO", `Position Teach: ${label} LR (${pos})`);
+      renderAll();
+    },
+    teachUD(pos) {
+      if (!ensureOperationAllowed()) return;
+      state.robot.ud = pos;
+      checkSoftLimit();
+      writeLog("Maint", "INFO", `Position Teach: UD (${pos})`);
+      renderAll();
+    },
+    demoNotice(msg) {
+      showToast(msg);
     }
   };
-
-  function ensureOperationAllowedForDoor(opening) {
-    if (!state.account) {
-      openLoginModal();
-      return false;
-    }
-    if (!opening) return true; // closing door allowed even under DoorOpenInterlock
-    return ensureOperationAllowed();
-  }
 
   function bindEvents() {
     document.querySelectorAll(".mode-btn").forEach((btn) => {
@@ -953,8 +922,7 @@
     document.getElementById("btnQuickAdminLogin").addEventListener("click", () => loginAs("voliti", "1"));
     document.getElementById("btnToggleMockFault").addEventListener("click", () => {
       const pms = ["PM A", "PM B", "PM C"];
-      const pick = pms[Math.floor(Math.random() * pms.length)];
-      raiseAlarm(pick, "ERROR", "Chamber Pressure Deviation Detected");
+      raiseAlarm(pms[Math.floor(Math.random() * 3)], "ERROR", "Chamber Pressure Deviation Detected");
     });
 
     document.getElementById("simSpeedSelect").addEventListener("change", (e) => {
@@ -968,10 +936,7 @@
     });
 
     document.getElementById("btnReconnect").addEventListener("click", () => {
-      if (!state.account) {
-        openLoginModal();
-        return;
-      }
+      if (!ensureOperationAllowed()) return;
       state.connected = true;
       writeLog("INFO", "INFO", "EtherCAT 마스터 연결 성공 (Mock CIFX-50RE)");
       showToast("가상 EtherCAT 마스터 연결 완료");
@@ -982,12 +947,11 @@
       state.axisFault = false;
       state.activeAlarms.clear();
       applyTowerForMode();
-      writeLog("Alarm", "INFO", "Alarm Reset 완료: PM Alarm 및 Fault 해제");
+      writeLog("Alarm", "INFO", "Alarm Reset 완료: PM Alarm 표시 해제");
       showToast("알람이 해제되었습니다.");
       renderAll();
     });
 
-    // Operate buttons
     document.getElementById("processRecipeSelect").addEventListener("change", (e) => {
       state.selectedProcessName = e.target.value;
     });
@@ -995,7 +959,7 @@
     document.getElementById("btnStart").addEventListener("click", () => {
       if (!ensureOperationAllowed()) return;
       if (!state.foupA.some(Boolean)) {
-        showToast("FOUP A에 웨이퍼가 없습니다. Initialize를 먼저 눌러주세요.");
+        showToast("FOUP A에 웨이퍼가 없습니다. Initialize를 눌러주세요.");
         return;
       }
       const proc = state.recipes.Process.find((r) => r.RecipeName === state.selectedProcessName);
@@ -1005,7 +969,7 @@
       state.seq.running = true;
       state.seq.paused = false;
       applyTowerForMode();
-      writeLog("INFO", "INFO", `자동 공정 시작: Process Recipe [${proc.RecipeName}]`);
+      writeLog("INFO", "INFO", `자동 공정 시작: ${proc.RecipeName}`);
       startSequenceLoop();
       renderAll();
     });
@@ -1045,8 +1009,7 @@
         state.pms[k].msg = "Aborted";
       });
       applyTowerForMode();
-      writeLog("Alarm", "WARN", "사용자 요청으로 자동 공정 중단(Abort) 및 안전 복귀");
-      showToast("공정이 중단되고 안전 위치로 복귀했습니다.");
+      writeLog("Alarm", "WARN", "사용자 요청으로 자동 공정 Abort");
       renderAll();
     });
 
@@ -1054,16 +1017,15 @@
       if (!ensureOperationAllowed()) return;
       state.foupA = [true, true, true, true, true];
       state.foupB = [false, false, false, false, false];
-      state.robot = { ud: 0, lr: 13140, targetLr: 13140, cylForward: false, cylBack: true, hasWafer: false, vacuumOn: false };
+      state.robot = { ud: 0, lr: 13140, cylForward: false, cylBack: true, hasWafer: false, vacuumOn: false };
       Object.keys(state.pms).forEach((k) => {
-        state.pms[k] = { doorOpen: false, lampOn: false, lampBlink: false, hasWafer: false, recipe: "-", step: "-", rTime: "0 / 0", sTime: "0 / 0", stepNum: "0 / 0 step", msg: "Initialized", progress: 0, status: "idle" };
+        state.pms[k] = { doorOpen: false, lampOn: false, lampBlink: false, hasWafer: false, recipe: "", step: "", rTime: "0 / 0", sTime: "0 / 0", stepNum: "0 / 0 step", msg: "", progress: 0, status: "idle" };
       });
-      writeLog("INFO", "INFO", "장비 Initialize 완료 (FOUP A 5매 적재 / 원점 복귀)");
-      showToast("장비 초기화 완료");
+      writeLog("INFO", "INFO", "Initialize 완료");
       renderAll();
     });
 
-    // Maint buttons
+    // Maint
     document.getElementById("btnCylFront").addEventListener("click", () => {
       if (!ensureOperationAllowed()) return;
       state.robot.cylForward = true;
@@ -1078,79 +1040,24 @@
       writeLog("Maint", "INFO", "Robot Cylinder Move Back");
       renderAll();
     });
-    document.getElementById("btnServoOn").addEventListener("click", () => {
-      state.servoOn = true;
-      writeLog("Maint", "INFO", "Servo Motor ON");
-      renderAll();
-    });
-    document.getElementById("btnServoOff").addEventListener("click", () => {
-      state.servoOn = false;
-      writeLog("Maint", "INFO", "Servo Motor OFF");
-      renderAll();
-    });
-    document.getElementById("btnUDBasic").addEventListener("click", () => {
-      if (!ensureOperationAllowed()) return;
-      state.robot.ud = 0;
-      renderAll();
-    });
-    document.getElementById("btnLRBasic").addEventListener("click", () => {
-      if (!ensureOperationAllowed() || checkCylLock()) return;
-      state.robot.lr = 0;
-      renderAll();
-    });
+    document.getElementById("btnServoOn").addEventListener("click", () => { state.servoOn = true; renderAll(); });
+    document.getElementById("btnServoOff").addEventListener("click", () => { state.servoOn = false; renderAll(); });
+    document.getElementById("btnUDBasic").addEventListener("click", () => { if (!ensureOperationAllowed()) return; state.robot.ud = 0; renderAll(); });
+    document.getElementById("btnLRBasic").addEventListener("click", () => { if (!ensureOperationAllowed() || checkCylLock()) return; state.robot.lr = 0; renderAll(); });
 
     const jogDist = () => Number(document.getElementById("inputJogDist").value) || 0;
-    document.getElementById("btnJogUp").addEventListener("click", () => {
-      if (!ensureOperationAllowed()) return;
-      state.robot.ud += jogDist();
-      checkSoftLimit();
-      renderAll();
-    });
-    document.getElementById("btnJogDown").addEventListener("click", () => {
-      if (!ensureOperationAllowed()) return;
-      state.robot.ud -= jogDist();
-      renderAll();
-    });
-    document.getElementById("btnJogLeft").addEventListener("click", () => {
-      if (!ensureOperationAllowed() || checkCylLock()) return;
-      state.robot.lr += jogDist();
-      renderAll();
-    });
-    document.getElementById("btnJogRight").addEventListener("click", () => {
-      if (!ensureOperationAllowed() || checkCylLock()) return;
-      state.robot.lr -= jogDist();
-      renderAll();
-    });
-    document.getElementById("btnUDMove").addEventListener("click", () => {
-      if (!ensureOperationAllowed()) return;
-      state.robot.ud = Number(document.getElementById("inputTargetPos").value) || 0;
-      checkSoftLimit();
-      renderAll();
-    });
-    document.getElementById("btnLRMove").addEventListener("click", () => {
-      if (!ensureOperationAllowed() || checkCylLock()) return;
-      state.robot.lr = Number(document.getElementById("inputTargetPos").value) || 0;
-      renderAll();
-    });
-    document.getElementById("btnInOn").addEventListener("click", () => {
-      if (!ensureOperationAllowed()) return;
-      state.robot.vacuumOn = true;
-      writeLog("Maint", "INFO", "Vacuum Inhalation ON");
-    });
-    document.getElementById("btnInOff").addEventListener("click", () => {
-      state.robot.vacuumOn = false;
-      writeLog("Maint", "INFO", "Vacuum Inhalation OFF");
-    });
-    document.getElementById("btnExOn").addEventListener("click", () => {
-      if (!ensureOperationAllowed()) return;
-      state.robot.vacuumOn = false;
-      state.robot.hasWafer = false;
-      writeLog("Maint", "INFO", "Vacuum Exhaust ON");
-      renderAll();
-    });
-    document.getElementById("btnExOff").addEventListener("click", () => writeLog("Maint", "INFO", "Vacuum Exhaust OFF"));
+    document.getElementById("btnJogUp").addEventListener("click", () => { if (!ensureOperationAllowed()) return; state.robot.ud += jogDist(); checkSoftLimit(); renderAll(); });
+    document.getElementById("btnJogDown").addEventListener("click", () => { if (!ensureOperationAllowed()) return; state.robot.ud -= jogDist(); renderAll(); });
+    document.getElementById("btnJogLeft").addEventListener("click", () => { if (!ensureOperationAllowed() || checkCylLock()) return; state.robot.lr += jogDist(); renderAll(); });
+    document.getElementById("btnJogRight").addEventListener("click", () => { if (!ensureOperationAllowed() || checkCylLock()) return; state.robot.lr -= jogDist(); renderAll(); });
+    document.getElementById("btnUDMove").addEventListener("click", () => { if (!ensureOperationAllowed()) return; state.robot.ud = Number(document.getElementById("inputTargetPos").value) || 0; checkSoftLimit(); renderAll(); });
+    document.getElementById("btnLRMove").addEventListener("click", () => { if (!ensureOperationAllowed() || checkCylLock()) return; state.robot.lr = Number(document.getElementById("inputTargetPos").value) || 0; renderAll(); });
+    document.getElementById("btnInOn").addEventListener("click", () => { if (!ensureOperationAllowed()) return; state.robot.vacuumOn = true; writeLog("Maint", "INFO", "Inhalation ON"); });
+    document.getElementById("btnInOff").addEventListener("click", () => { state.robot.vacuumOn = false; writeLog("Maint", "INFO", "Inhalation OFF"); });
+    document.getElementById("btnExOn").addEventListener("click", () => { if (!ensureOperationAllowed()) return; state.robot.vacuumOn = false; state.robot.hasWafer = false; writeLog("Maint", "INFO", "Exhaust ON"); renderAll(); });
+    document.getElementById("btnExOff").addEventListener("click", () => writeLog("Maint", "INFO", "Exhaust OFF"));
 
-    // Recipe tabs & CRUD
+    // Recipe
     document.querySelectorAll("[data-rtab]").forEach((btn) => {
       btn.addEventListener("click", () => {
         document.querySelectorAll("[data-rtab]").forEach((b) => b.classList.remove("active"));
@@ -1178,11 +1085,25 @@
           cur.Fields[inp.dataset.rfield] = inp.value;
         });
         cur.RecipeName = cur.Fields["Recipe Name"] || cur.RecipeName;
-        cur.PPID = cur.Fields["PPID"] || cur.PPID;
+        cur.PPID = cur.Fields["PP ID"] || cur.PPID;
       }
-      saveStorage("sct_recipes_v1", state.recipes);
+      saveStorage("sct_recipes_v2", state.recipes);
       writeLog("INFO", "INFO", `레시피 저장: ${cur.RecipeName}`);
-      showToast("레시피가 저장되었습니다.");
+      showToast("레시피 저장 완료");
+      renderRecipes();
+    });
+
+    document.getElementById("btnRecipeSaveAs").addEventListener("click", () => {
+      const items = state.recipes[state.recipeTab];
+      const cur = items && items[state.selectedRecipeIdx];
+      if (!cur) return;
+      const copy = JSON.parse(JSON.stringify(cur));
+      copy.RecipeName = `${cur.RecipeName}_Copy`;
+      if (copy.Fields) copy.Fields["Recipe Name"] = copy.RecipeName;
+      items.push(copy);
+      state.selectedRecipeIdx = items.length - 1;
+      saveStorage("sct_recipes_v2", state.recipes);
+      showToast(`다른 이름으로 저장: ${copy.RecipeName}`);
       renderRecipes();
     });
 
@@ -1197,7 +1118,7 @@
         items.push(template);
       }
       state.selectedRecipeIdx = items.length - 1;
-      saveStorage("sct_recipes_v1", state.recipes);
+      saveStorage("sct_recipes_v2", state.recipes);
       renderRecipes();
     });
 
@@ -1209,19 +1130,15 @@
       }
       items.splice(state.selectedRecipeIdx, 1);
       state.selectedRecipeIdx = 0;
-      saveStorage("sct_recipes_v1", state.recipes);
+      saveStorage("sct_recipes_v2", state.recipes);
       renderRecipes();
     });
 
-    document.getElementById("btnRecipeReset").addEventListener("click", () => {
-      state.recipes = JSON.parse(JSON.stringify(DEFAULT_RECIPES));
-      state.selectedRecipeIdx = 0;
-      saveStorage("sct_recipes_v1", state.recipes);
-      showToast("기본 레시피로 복원되었습니다.");
-      renderRecipes();
+    document.getElementById("btnRecipeOpenFolder").addEventListener("click", () => {
+      showToast("웹 시뮬레이터 환경: 레시피는 브라우저 localStorage(data/Recipe 구조)에 저장됩니다.");
     });
 
-    // Log controls
+    // Log
     document.querySelectorAll("[data-ltab]").forEach((btn) => {
       btn.addEventListener("click", () => {
         document.querySelectorAll("[data-ltab]").forEach((b) => b.classList.remove("active"));
@@ -1232,12 +1149,10 @@
     });
     document.getElementById("btnRandomAlarm").addEventListener("click", () => {
       const pms = ["PM A", "PM B", "PM C"];
-      raiseAlarm(pms[Math.floor(Math.random() * 3)], "ERROR", "Random Demo Alarm Triggered");
+      raiseAlarm(pms[Math.floor(Math.random() * 3)], "ERROR", "Random Alarm Triggered");
     });
-    document.getElementById("btnSortToggle").addEventListener("click", () => {
-      state.logDesc = !state.logDesc;
-      renderLogs();
-    });
+    document.getElementById("btnSortToggle").addEventListener("click", () => { state.logDesc = !state.logDesc; renderLogs(); });
+    document.getElementById("btnSelectMode").addEventListener("click", () => showToast("단일 행 클릭으로 상세 로그를 확인할 수 있습니다."));
     document.getElementById("btnLogSearch").addEventListener("click", renderLogs);
     document.getElementById("btnLogClearFilter").addEventListener("click", () => {
       document.getElementById("filterLevel").value = "";
@@ -1260,7 +1175,18 @@
       a.click();
     });
 
-    // Setting controls
+    // Setting
+    document.getElementById("btnParamSet").addEventListener("click", () => {
+      state.settings.Accel = Number(document.getElementById("setAccel").value);
+      state.settings.Decel = Number(document.getElementById("setDecel").value);
+      state.settings.MaxVelo = Number(document.getElementById("setMaxVelo").value);
+      state.settings.Velo = Number(document.getElementById("setVelo").value);
+      saveStorage("sct_settings_v2", state.settings);
+      showToast("Robot Parameter 적용 완료");
+    });
+    document.getElementById("btnOpenRecipeFolderSetting").addEventListener("click", () => {
+      showToast("웹 시뮬레이터 환경: data\\Recipe 가상 경로 사용 중");
+    });
     document.getElementById("btnSettingApply").addEventListener("click", () => {
       state.settings.Accel = Number(document.getElementById("setAccel").value);
       state.settings.Decel = Number(document.getElementById("setDecel").value);
@@ -1273,12 +1199,14 @@
       state.settings.EtherCatReadCycleMs = Number(document.getElementById("setCycleMs").value);
       state.settings.ReconnectRetryCount = Number(document.getElementById("setRetry").value);
       state.settings.ConnectionTimeoutMs = Number(document.getElementById("setTimeout").value);
+      state.settings.LogRetentionDays = Number(document.getElementById("setLogDays").value);
+      state.settings.MaxDisplayLogCount = Number(document.getElementById("setMaxLogs").value);
       state.settings.ShowDebugLog = document.getElementById("setShowDebug").value === "true";
       state.settings.IdleLampStatus = document.getElementById("setIdleLamp").value;
       state.settings.RunLampStatus = document.getElementById("setRunLamp").value;
       state.settings.AlarmLampStatus = document.getElementById("setAlarmLamp").value;
       state.settings.MaintenanceLampStatus = document.getElementById("setMaintLamp").value;
-      saveStorage("sct_settings_v1", state.settings);
+      saveStorage("sct_settings_v2", state.settings);
       applyTowerForMode();
       writeLog("INFO", "INFO", "장비 설정(Settings) 적용 완료");
       showToast("설정이 적용되었습니다.");
@@ -1287,28 +1215,15 @@
       renderSettings();
       showToast("변경 사항을 되돌렸습니다.");
     });
+
+    window.addEventListener("resize", fitStage);
   }
 
-  function checkCylLock() {
-    if (state.robot.cylForward) {
-      showToast("웨이퍼 이송 실린더가 전진되어 있어 좌우 이동할 수 없습니다.");
-      return true;
-    }
-    return false;
-  }
-
-  function checkSoftLimit() {
-    if (state.robot.ud > AXIS1_SOFT_LIMIT) {
-      state.axisFault = true;
-      raiseAlarm("PM A", "ERROR", `UD 축 상한 소프트 리밋(${AXIS1_SOFT_LIMIT}) 초과 -> 동작 차단`);
-    }
-  }
-
-  // Init
   writeLog("INFO", "INFO", "EtherCAT 마스터 연결 성공 (Mock CIFX-50RE)");
-  writeLog("INFO", "INFO", "시스템 초기화 완료 (초기 모드: Operate)");
+  writeLog("INFO", "INFO", "시스템 초기화 완료 (초기 모드: AUTO)");
   bindEvents();
   renderAll();
+  fitStage();
   setInterval(() => {
     const dt = nowStrings();
     document.getElementById("lblDate").textContent = dt.date;
